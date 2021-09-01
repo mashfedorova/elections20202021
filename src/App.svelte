@@ -3,6 +3,8 @@ import { csv, json, timeParse} from 'd3';
 import { onMount } from 'svelte';
 import IntroChart from '../components/IntroChart.svelte'
 
+let width = 0;
+
 let data = [];
 const parseMonthYear = timeParse("%B %Y");
 
@@ -19,8 +21,13 @@ onMount(async () => {
   // console.log(data)
 });
 </script>
-<IntroChart {data}/>
+<div class="intro-chart" bind:clientWidth={width} >
+  <IntroChart {data} width={width}/>
+</div>
 
 <style>
-
+.intro-chart {
+  margin: 0 auto;
+  max-width: 1200px;
+}
 </style>
