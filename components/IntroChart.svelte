@@ -1,6 +1,6 @@
 <script>
-import { scaleTime, scaleLinear, extent, max, timeFormat,timeParse, scaleBand} from 'd3';
-
+import { scaleTime, scaleLinear, extent, max, timeFormat,timeParse} from 'd3';
+import { fade } from 'svelte/transition'
 export let data;
 export let width = 0;
 
@@ -11,17 +11,22 @@ const modifier = 10;
 
 $: height = width/2;
 
+$: xScaleTicks = scaleTime()
+  .domain(extent(months, d => d))
+  .range([margin.left, width-margin.right ])
+
 $: xScale = scaleTime()
   .domain(extent(data, d => d.heldMonthYearDate))
   .range([margin.left, width-margin.right ])
 
 $: yScale = scaleLinear()
   .domain([0, max(data, d => d.position)])
-  .range([height-margin.bottom, margin.top ])
+  .range([height-margin.bottom, margin.top])
 
 </script>
 <svg width={width} height={height}>
   {#each data as d}
+  <g in:fade="{{delay: xScale(d.heldAtAll === 'no' ? d.postponedMonthYearDate : d.heldMonthYearDate)*2}}">
     <path
     d={d.d}
     transform="translate({xScale(d.heldAtAll === 'no' ? d.postponedMonthYearDate : d.heldMonthYearDate)}, {yScale(d.position)})"
@@ -29,8 +34,6 @@ $: yScale = scaleLinear()
     fill= '#fff'
     stroke-width='2'
     ></path>
-    {/each}
-    {#each data as d}
     <path
     d={d.d1}
     transform="translate({xScale(d.heldAtAll === 'no' ? d.postponedMonthYearDate : d.heldMonthYearDate)}, {yScale(d.position)})"
@@ -38,10 +41,7 @@ $: yScale = scaleLinear()
     fill= '#fff'
     stroke-width='2'
     ></path>
-    {/each}
-    {#each data as d}
     <g transform="translate({xScale(d.heldAtAll === 'no' ? d.postponedMonthYearDate : d.heldMonthYearDate)}, {yScale(d.position)})">
-      {#each data as d}
       <circle
       cx={d.d4 ? 9 : 8}
       cy=23
@@ -50,28 +50,47 @@ $: yScale = scaleLinear()
       fill= '#fff'
       stroke-width='2'
       ></circle>
-      {/each}
+  </g>
     </g>
     {/each}
-    {#if width<1050}
-      {#each months as month}
-        <g class="tick-small" transform="translate({xScale(month)}, {height-margin.bottom+15})">
-          <text x="0" y="0" fill='#000' opacity='0.7'>{timeFormat("%b")(month)}</text>
+
+     {#if width<1050}
+       {#each months as month}
+        <g class="tick-small" transform="translate({xScaleTicks(month)}, {height-margin.bottom+15})">
+          <text x="0" y="0" fill='#000' opacity='0.7' fade:in>{timeFormat("%b")(month)}</text>
         </g>
       {/each}
-      {:else}
+       {:else}
       {#each months as month }
-        <g class="tick" transform="translate({xScale(month)-modifier}, {height-margin.bottom+10})">
-          <text x="0" y="0" fill='#000' opacity='0.7'>{timeFormat("%b %y")(month)}</text>
+        <g class="tick" transform="translate({xScaleTicks(month)-modifier}, {height-margin.bottom+10})">
+          <text x="0" y="0" fill='#000' opacity='0.7' fade:in>{timeFormat("%b %y")(month)}</text>
         </g>
       {/each}
       {/if}
+    <!-- {#each data.filter(d => d.heldAtAll === 'no') as d}
+    <g transform="translate({xScale(d.heldAtAll === 'no' ? d.postponedMonthYearDate : d.heldMonthYearDate)}, {yScale(d.position)})">
+      <rect in:fade="{{delay: xScale(d.heldAtAll === 'no' ? d.postponedMonthYearDate : d.heldMonthYearDate)*2}}"
+      x="3"
+      y="5"
+      width="18"
+      height="23"
+      fill="plum"
+      opacity="0.9"
+      filter='url(#highlight)'>
+    </rect>
+    </g>
+    {/each} -->
+
+      <filter id="highlight">
+        <feGaussianBlur stdDeviation="7 7"/>
+      </filter>
   </svg>
-
-  <p>{width}</p>
-
 <style>
 .tick-small {
   font-size: 0.8em;
+}
+svg {
+  display: block;
+  margin: auto;
 }
 </style>
