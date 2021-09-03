@@ -6,7 +6,7 @@
 <script>
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { csv, json, timeParse} from 'd3';
+import { csv, timeParse} from 'd3';
 import { onMount } from 'svelte';
 import IntroChart from '../components/IntroChart.svelte'
 
@@ -14,8 +14,11 @@ gsap.registerPlugin(ScrollTrigger);
 
 let width = document.body.clientWidth;
 $: widthChart = width > 1270 ? 1270 : width;
+
 let updatedData = [];
 let data = [];
+let cancelledBallots = [];
+
 const parseMonthYear = timeParse("%B %Y");
 
 
@@ -24,8 +27,13 @@ function resize() {
 }
 
 function updateData() {
-  updatedData = data;
+  updatedData = data.filter(d => d.heldAtAll === 'yes');
 }
+
+function step2() {
+  cancelledBallots = data.filter(d => d.heldAtAll === 'no');
+}
+
 
 onMount(
   async () => {
@@ -57,8 +65,6 @@ onMount(() => {
   ScrollTrigger.create({
       trigger: "#step-1",
       start: "top 80%",
-      // markers: true,
-      // onEnter: updateData
       });
 
   ScrollTrigger.create({
@@ -67,6 +73,13 @@ onMount(() => {
       markers: true,
       onEnter: updateData
 });
+
+  ScrollTrigger.create({
+      trigger: "#step-2",
+      start: "top 80%",
+      onEnter: step2
+      });
+
 })
 
 
@@ -77,7 +90,9 @@ onMount(() => {
   <p class="intro-para">Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae ea tenetur exercitationem, voluptatem quo temporibus aliquid optio suscipit, veniam pariatur quaerat natus at. Ab vitae iusto dolor voluptas officiis eaque libero reiciendis quas voluptates perferendis ratione, odio corrupti omnis tempora quo a? Amet ducimus laborum ipsum quidem consequatur, vitae ex nihil dolore accusamus tempora, iusto hic culpa vero, doloremque eos.</p>
 </section>
 <div id="intro-chart" bind:this={width} >
-  <IntroChart data={updatedData} width={widthChart}/>
+  <IntroChart data={updatedData} width={widthChart} {cancelledBallots}/>
+  <!-- <CancelledBallots {cancelledBallots} width={widthChart}/> -->
+
 </div>
 <article class="scrolls">
   <section class="step" id="step-1">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet, fugiat dolores. Quo officia facere tenetur dicta eligendi dolore esse consectetur eos quis iusto eveniet nesciunt, dolorum aliquam repudiandae dignissimos provident!</section>
@@ -86,6 +101,13 @@ onMount(() => {
 </article>
 
 <style>
+
+.pin-spacer {
+  align-items: center;
+  justify-content: center;
+}
+
+
 .intro {
   margin: 0 auto;
   max-width: 650px;
@@ -105,10 +127,11 @@ h1 {
 
 #intro-chart {
   margin: 0 auto;
-  max-width: 1200px;
+  /* max-width: 1200px; */
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   height: 100vh;
 }
 
