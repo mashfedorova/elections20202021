@@ -1,14 +1,14 @@
 <script>
-import { scaleTime, scaleLinear, extent, max, timeFormat,timeParse} from 'd3';
+import { scaleTime, scaleLinear, extent, max, timeFormat, timeParse, scaleBand} from 'd3';
 import { fade } from 'svelte/transition'
 export let data;
 export let width = 0;
 export let cancelledBallots;
-
 const monthsRaw = ["April 2021","June 2021","November 2020","June 2020","August 2020","October 2020","December 2020","March 2021","July 2020","May 2021","September 2020","February 2021","March 2020","January 2021","April 2020","May 2020"]
 const months = monthsRaw.map(date => timeParse("%B %Y")(date))
 const margin = { top:20, right:100, bottom:20, left:100 };
 const modifier = 10;
+export let whichY;
 
 $: height = width/2;
 
@@ -24,33 +24,43 @@ $: yScale = scaleLinear()
   .domain([0, max(data, d => d.position)])
   .range([height-margin.bottom, margin.top])
 
-$: xScaleCancelled = scaleTime()
-.domain(extent(cancelledBallots, d => d.postponedMonthYearDate))
+$: xScale = scaleBand()
+.domain(extent(data, d => d.demIndexCat))
 .range([margin.left, width-margin.right ])
 
-$: yScaleCancelled = scaleLinear()
-  .domain([0, max(cancelledBallots, d => d.position)])
-  .range([height-margin.bottom, margin.top])
+  $: calcData = data.map(d => {
+  return {
+    x: xScale(d.heldMonthYearDate),
+    y: yScale(d[whichY]),
+    d: d.d,
+    d1: d.d1,
+    d4: d.d4,
+    y1: yScale(1),
+
+  };
+});
 
 </script>
 <svg width={width} height={height}>
-  {#each data as d}
-  <g in:fade="{{delay: xScale(d.heldMonthYearDate)*2}}">
+  {#each calcData as d}
+  <g class="animate"
+  transform="translate({d.x}, {d.y})"
+  in:fade="{{delay: d.x*2}}"
+  style="--x: {d.x}px; --y: {d.y}px;"
+  >
     <path
     d={d.d}
-    transform="translate({xScale(d.heldMonthYearDate)}, {yScale(d.position)})"
     stroke='#000'
     fill= '#fff'
     stroke-width='2'
     ></path>
     <path
     d={d.d1}
-    transform="translate({xScale(d.heldMonthYearDate)}, {yScale(d.position)})"
     stroke='#000'
     fill= '#fff'
     stroke-width='2'
     ></path>
-    <g transform="translate({xScale(d.heldMonthYearDate)}, {yScale(d.position)})">
+    <g >
       <circle
       cx={d.d4 ? 9 : 8}
       cy=23
@@ -127,4 +137,9 @@ svg {
   display: block;
   /* margin: 0 auto; */
 }
+	.animate {
+	transform: translate(var(--x), var(--y));
+  transition: transform 1s linear;
+	}
+
 </style>
