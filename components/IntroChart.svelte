@@ -24,20 +24,20 @@ $: yScale = scaleLinear()
   .domain([0, max(data, d => d.position)])
   .range([height-margin.bottom, margin.top])
 
-$: xScale = scaleBand()
+$: xScaleDem = scaleBand()
 .domain(extent(data, d => d.demIndexCat))
 .range([margin.left, width-margin.right ])
 
-  $: calcData = data.map(d => {
-  return {
-    x: xScale(d.heldMonthYearDate),
-    y: yScale(d[whichY]),
-    d: d.d,
-    d1: d.d1,
-    d4: d.d4,
-    y1: yScale(1),
+$: calcData = data.map(d => {
+return {
+  x: xScale(d.heldMonthYearDate),
+  y: yScale(d[whichY]),
+  d: d.d,
+  d1: d.d1,
+  d4: d.d4,
+  y1: yScale(1),
 
-  };
+};
 });
 
 </script>
