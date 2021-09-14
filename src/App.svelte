@@ -1,6 +1,6 @@
 <!-- <svelte:head>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js"></script>
-  <script src="https://scdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js"></script>
+<script src="https://scdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/ScrollTrigger.min.js"></script>
   <script src=".scripts/DrawSVGPlugin.min.js"></script>
 </svelte:head> -->
 <script>
@@ -8,48 +8,82 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { csv, timeParse} from 'd3';
 import { onMount } from 'svelte';
-import IntroChart from '../components/IntroChart.svelte'
+import IntroChart from '../components/IntroChart.svelte';
+import  {_} from 'lodash';
 gsap.registerPlugin(ScrollTrigger);
+
 let width = document.body.clientWidth;
 $: widthChart = width > 1270 ? 1270 : width;
+
 let updatedData = [];
 let data = [];
 let cancelledBallots = [];
+let dataRectsPostponed = [];
+let whichY = 'y';
+let whichX = 'x';
 const parseMonthYear = timeParse("%B %Y");
-let whichY = 'position';
+let monthsRaw = [];
+let regimes = [];
+let monthsList = ["April 2021","June 2021","November 2020","June 2020","August 2020","October 2020","December 2020","March 2021","July 2020",
+"May 2021","September 2020","February 2021","March 2020","January 2021","April 2020","May 2020"];
+let dataPostponedBallots = [];
+let marginLeft = 100;
+
 function resize() {
    width = document.body.clientWidth
 }
 function updateData() {
   updatedData = data.filter(d => d.heldAtAll === 'yes');
+  monthsRaw = monthsList;
 }
 function step2() {
   cancelledBallots = data.filter(d => d.heldAtAll === 'no');
 }
 
 function step3() {
-  whichY = 'test';
+  whichY =  'yDem';
+  whichX = 'xDem';
+  data = _.sortBy(data, 'demIndexCat')
+  dataRectsPostponed = data.filter(d => d.werePostponed === 'yes' && d.heldAtAll === 'yes');
+  monthsRaw = [];
+  regimes = ["democracy","unclassified","authoritarian regime","hybrid regime"];
 }
+
+function step4() {
+  whichY =  'yHeld';
+  whichX = 'xHeld';
+  updatedData = dataRectsPostponed
+  monthsRaw = monthsList
+  cancelledBallots = []
+  dataPostponedBallots = data.filter(d => d.werePostponed === 'yes' && d.heldAtAll === 'yes');
+  regimes = [];
+  marginLeft = 300;
+
+}
+
 onMount(
   async () => {
-  const dataRaw = await csv('data/dataFinal.csv', d => {
+  const dataRaw = await csv('data/dataFinal5.csv', d => {
     return {
     ...d,
     position: +d.position,
-    test: +d.position + 1,
+    demIndexScaleY: +d.demIndexScaleY,
+    demIndexScaleX: +d.demIndexScaleX,
     heldMonthYearDate: parseMonthYear(d.heldMonthYear),
     postponedMonthYearDate: parseMonthYear(d.postponedMonthYear),
+    postponedMonthYearDate2: parseMonthYear(d.postponedMonthYear2),
     }
   })
   data = dataRaw;
-  console.log(data)
+  // console.log(data)
 });
-console.log(whichY)
+
 onMount(resize)
+
 onMount(() => {
   ScrollTrigger.create({
     trigger: '#intro-chart',
-    endTrigger: '#step-3',
+    endTrigger: '#step-5',
     start: 'center center',
     end: '#step-3',
     pin: true,
@@ -76,15 +110,23 @@ onMount(() => {
       start: "top 80%",
       onEnter: step3
       });
+
+  ScrollTrigger.create({
+      trigger: "#step-4",
+      start: "top 80%",
+      onEnter: step4
+      });
 })
 </script>
 <svelte:window on:resize='{resize}'/>
 <section class="intro">
   <h1> Elections between 2020 and July 2021</h1>
+  <!-- <h1> Text</h1> -->
   <p class="intro-para">Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae ea tenetur exercitationem, voluptatem quo temporibus aliquid optio suscipit, veniam pariatur quaerat natus at. Ab vitae iusto dolor voluptas officiis eaque libero reiciendis quas voluptates perferendis ratione, odio corrupti omnis tempora quo a? Amet ducimus laborum ipsum quidem consequatur, vitae ex nihil dolore accusamus tempora, iusto hic culpa vero, doloremque eos.</p>
 </section>
 <div id="intro-chart" bind:this={width} >
-  <IntroChart data={updatedData} width={widthChart} {cancelledBallots} {whichY}/>
+  <IntroChart data={updatedData} width={widthChart} {cancelledBallots} {whichY} {whichX} {dataRectsPostponed} {monthsRaw} {regimes}
+  constData={data} {dataPostponedBallots} {marginLeft}/>
   <!-- <CancelledBallots {cancelledBallots} width={widthChart}/> -->
 
 </div>
@@ -92,6 +134,8 @@ onMount(() => {
   <section class="step" id="step-1">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet, fugiat dolores. Quo officia facere tenetur dicta eligendi dolore esse consectetur eos quis iusto eveniet nesciunt, dolorum aliquam repudiandae dignissimos provident!</section>
   <section class="step" id="step-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet, fugiat dolores. Quo officia facere tenetur dicta eligendi dolore esse consectetur eos quis iusto eveniet nesciunt, dolorum aliquam repudiandae dignissimos provident!</section>
   <section class="step" id="step-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet, fugiat dolores. Quo officia facere tenetur dicta eligendi dolore esse consectetur eos quis iusto eveniet nesciunt, dolorum aliquam repudiandae dignissimos provident!</section>
+  <section class="step" id="step-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet, fugiat dolores. Quo officia facere tenetur dicta eligendi dolore esse consectetur eos quis iusto eveniet nesciunt, dolorum aliquam repudiandae dignissimos provident!</section>
+  <section class="step" id="step-5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet, fugiat dolores. Quo officia facere tenetur dicta eligendi dolore esse consectetur eos quis iusto eveniet nesciunt, dolorum aliquam repudiandae dignissimos provident!</section>
 </article>
 
 <style>

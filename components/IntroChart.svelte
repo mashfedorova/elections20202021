@@ -1,15 +1,26 @@
 <script>
-import { scaleTime, scaleLinear, extent, max, timeFormat, timeParse, scaleBand} from 'd3';
+import { scaleTime, scaleLinear, extent, max, timeFormat, timeParse, scaleBand, scaleOrdinal, map} from 'd3';
+import { detach_dev } from 'svelte/internal';
 import { fade } from 'svelte/transition'
 export let data;
 export let width = 0;
 export let cancelledBallots;
-const monthsRaw = ["April 2021","June 2021","November 2020","June 2020","August 2020","October 2020","December 2020","March 2021","July 2020","May 2021","September 2020","February 2021","March 2020","January 2021","April 2020","May 2020"]
-const months = monthsRaw.map(date => timeParse("%B %Y")(date))
-const margin = { top:20, right:100, bottom:20, left:100 };
+export let monthsRaw;
+const marginDem = { top:25, right:250, bottom:40, left:250 };
 const modifier = 10;
-export let whichY;
+export let whichY = 'y';
+export let whichX = 'x';
+export let dataRectsPostponed;
+export let regimes;
+export let constData;
+export let dataPostponedBallots;
+export let marginLeft;
 
+$: margin = { top:20, right:100, bottom:20, left:marginLeft };
+
+$: alldates = extent(constData, d => d.heldMonthYearDate)
+
+$: months = monthsRaw.map(date => timeParse("%B %Y")(date))
 $: height = width/2;
 
 $: xScaleTicks = scaleTime()
@@ -17,36 +28,118 @@ $: xScaleTicks = scaleTime()
   .range([margin.left, width-margin.right ])
 
 $: xScale = scaleTime()
-  .domain(extent(data, d => d.heldMonthYearDate))
+  .domain(extent(alldates, d => d))
   .range([margin.left, width-margin.right ])
 
 $: yScale = scaleLinear()
   .domain([0, max(data, d => d.position)])
   .range([height-margin.bottom, margin.top])
 
-$: xScaleDem = scaleBand()
-.domain(extent(data, d => d.demIndexCat))
-.range([margin.left, width-margin.right ])
+$: xScaleDem = scaleLinear()
+.domain(extent(data, d => d.demIndexScaleX))
+.range([marginDem.left, width-marginDem.right ])
 
-$: calcData = data.map(d => {
+$: yScaleDem = scaleLinear()
+.domain(extent(data, d => d.demIndexScaleY))
+.range([marginDem.top, height-marginDem.bottom,])
+
+$: xScaleTextReg = scaleOrdinal()
+.domain(regimes)
+.range([marginDem.left, marginDem.left, width/1.73, width/1.73])
+
+$: yScaleTextReg = scaleOrdinal()
+.domain(regimes)
+.range([margin.top, height/1.5, margin.top, height/1.5])
+
+$: yScalePostponed = scaleBand()
+.domain(map(dataRectsPostponed, d => d.country))
+.range([height-margin.bottom, margin.top])
+
+$: dataHeld = data.filter( d => d.werePostponed === 'no')
+$: dataPostponed = data.filter( d => d.werePostponed === 'yes')
+
+$: dataHeldCalc = dataHeld.map(d => {
 return {
   x: xScale(d.heldMonthYearDate),
-  y: yScale(d[whichY]),
+  y: yScale(d.position),
   d: d.d,
   d1: d.d1,
   d4: d.d4,
-  y1: yScale(1),
-
+  yDem: yScaleDem(d.demIndexScaleY),
+  xDem: xScaleDem(d.demIndexScaleX),
+  postponed: d.werePostponed,
+  xPost1: xScale(d.postponedMonthYearDate),
+  yPost: yScalePostponed(d.country),
+  country: d.country
 };
 });
 
+$: dataPostponedCalc = dataPostponed.map(d => {
+return {
+  x: xScale(d.heldMonthYearDate),
+  y: yScale(d.position),
+  d: d.d,
+  d1: d.d1,
+  d4: d.d4,
+  yDem: yScaleDem(d.demIndexScaleY),
+  xDem: xScaleDem(d.demIndexScaleX),
+  postponed: d.werePostponed,
+  xHeld: xScale(d.heldMonthYearDate),
+  xPost1: xScale(d.postponedMonthYearDate),
+  yPost: yScalePostponed(d.country),
+  yHeld: yScalePostponed(d.country),
+  country: d.country
+};
+});
+
+$: cancelledBallotsData = cancelledBallots.map(d => {
+return {
+  x: xScale(d.postponedMonthYearDate),
+  y: yScale(d.position),
+  d: d.d,
+  d1: d.d1,
+  d4: d.d4,
+  yDem: yScaleDem(d.demIndexScaleY),
+  xDem: xScaleDem(d.demIndexScaleX),  country: d.country,
+};
+});
+
+$: dataPostponedDates = dataPostponedBallots.map(d => {
+return {
+  d: d.d,
+  d1: d.d1,
+  d4: d.d4,
+  yDem: yScaleDem(d.demIndexScaleY),
+  xDem: xScaleDem(d.demIndexScaleX),
+  xPost1: xScale(d.postponedMonthYearDate),
+  yPost: yScalePostponed(d.country),
+  yHeld: yScalePostponed(d.country),
+  xHeld: xScale(d.heldMonthYearDate),
+  country: d.country,
+};
+});
+// $: console.log(dataPostponedDates)
+
+// $: dataPostponed = dataRectsPostponed.map(d => {
+// return {
+//   x: xScale(d.heldMonthYearDate),
+//   y: yScale(d.position),
+//   yDem: yScaleDem(d.demIndexScaleY),
+//   xDem: xScaleDem(d.demIndexScaleX),
+//   xPost1: xScale(d.postponedMonthYearDate),
+//   yPost: yScalePostponed(d.country)
+// };
+// });
+
+$: console.log(dataPostponedDates)
+
 </script>
 <svg width={width} height={height}>
-  {#each calcData as d}
+  {#each dataHeldCalc as d}
   <g class="animate"
-  transform="translate({d.x}, {d.y})"
-  in:fade="{{delay: d.x*2}}"
-  style="--x: {d.x}px; --y: {d.y}px;"
+  transform="translate({d[whichX]}, {d[whichY]})"
+  in:fade="{{delay: d[whichX]*2}}"
+  style="--x: {d[whichX]}px; --y: {d[whichY]}px;"
   >
     <path
     d={d.d}
@@ -60,7 +153,7 @@ return {
     fill= '#fff'
     stroke-width='2'
     ></path>
-    <g >
+    <!-- <g > -->
       <circle
       cx={d.d4 ? 9 : 8}
       cy=23
@@ -69,8 +162,95 @@ return {
       fill= '#fff'
       stroke-width='2'
       ></circle>
-  </g>
-    </g>
+  <!-- </g> -->
+</g>
+    {/each}
+
+{#each dataPostponedDates as d}
+        <line
+        in:fade="{{delay: 1000}}"
+        x1={d.xPost1+23}
+        x2={d.xHeld}
+        y1={d.yPost+15}
+        y2={d.yHeld+15}
+        stroke='blue'
+        stroke-width='5'
+        stroke-opacity='0.2'
+        ></line>
+  {/each}
+
+
+  {#each dataPostponedCalc as d}
+      <g class="animate"
+      transform="translate({d[whichX]}, {d[whichY]})"
+      in:fade="{{delay: d[whichX]*2}}"
+      style="--x: {d[whichX]}px; --y: {d[whichY]}px;"
+      >
+        <path
+        d={d.d}
+        stroke='#000'
+        fill= '#fff'
+        stroke-width='2'
+        ></path>
+        <path
+        d={d.d1}
+        stroke='#000'
+        fill= '#fff'
+        stroke-width='2'
+        ></path>
+          <circle
+          cx={d.d4 ? 9 : 8}
+          cy=23
+          r= {d.d4 ? 2 : 3}
+          stroke='#000'
+          fill= '#fff'
+          stroke-width='2'
+          ></circle>
+          <rect
+              x={3}
+              y={5}
+              width="18"
+              height="23"
+              fill="blue"
+              opacity="0.9"
+              filter='url(#highlight)'>
+          </rect>
+      </g>
+    {/each}
+
+  {#each dataPostponedDates as d}
+      <g class="animate"
+      transform="translate({d.xPost1}, {d.yPost})"
+      in:fade="{{delay: 500}}"
+      style="--x: {d.xPost1}px; --y: {d.yPost}px;"
+      >
+        <path
+        d={d.d}
+        stroke='#000'
+        fill= '#fff'
+        stroke-width='2'
+        ></path>
+        <path
+        d={d.d1}
+        stroke='#000'
+        fill= '#fff'
+        stroke-width='2'
+        ></path>
+          <circle
+          cx={d.d4 ? 9 : 8}
+          cy=23
+          r= {d.d4 ? 2 : 3}
+          stroke='#000'
+          fill= '#fff'
+          stroke-width='2'
+          ></circle>
+        </g>
+        <text
+        in:fade="{{delay: 1000}}"
+          x={200}
+          y={d.yPost+15}>
+          {d.country}
+        </text>
     {/each}
 
     {#if width<1050}
@@ -87,23 +267,21 @@ return {
     {/each}
     {/if}
 
-    {#each cancelledBallots as d}
-      <g in:fade="{{duration: 1000}}">
+    {#each cancelledBallotsData as d}
+      <g class="animate" style="--x: {d[whichX]}px; --y: {d[whichY]}px;" in:fade="{{duration: 1000}}" out:fade="{{duration: 100}}">
         <path
         d={d.d}
-        transform="translate({xScale(d.postponedMonthYearDate)}, {yScale(d.position)})"
         stroke='#000'
         fill= '#fff'
         stroke-width='2'
         ></path>
         <path
         d={d.d1}
-        transform="translate({xScale(d.postponedMonthYearDate)}, {yScale(d.position)})"
         stroke='#000'
         fill= '#fff'
         stroke-width='2'
         ></path>
-        <g transform="translate({xScale(d.postponedMonthYearDate)}, {yScale(d.position)})">
+        <!-- <g transform="translate({d[whichX]}, {d[whichY]})"> -->
           <circle
           cx={d.d4 ? 9 : 8}
           cy=23
@@ -121,8 +299,14 @@ return {
           opacity="0.9"
           filter='url(#highlight)'>
           </rect>
-        </g>
+        <!-- </g> -->
       </g>
+    {/each}
+
+
+
+    {#each regimes as d}
+      <text class="regimes" x={xScaleTextReg(d)} y={yScaleTextReg(d)} in:fade="{{duration: 500, delay: 900}}">{d}</text>
     {/each}
 
       <filter id="highlight">
@@ -139,7 +323,15 @@ svg {
 }
 	.animate {
 	transform: translate(var(--x), var(--y));
-  transition: transform 1s linear;
+  transition: transform 1s ease-out;
 	}
+
+  .regimes {
+    letter-spacing: 0.2em;
+  }
+
+  rect {
+    transition: all 1s;
+  }
 
 </style>
