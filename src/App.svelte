@@ -28,6 +28,7 @@ let monthsList = ["April 2021","June 2021","November 2020","June 2020","August 2
 "May 2021","September 2020","February 2021","March 2020","January 2021","April 2020","May 2020"];
 let dataPostponedBallots = [];
 let marginLeft = 100;
+let colorBallot = 'no';
 
 function resize() {
    width = document.body.clientWidth
@@ -43,7 +44,7 @@ function step2() {
 function step3() {
   whichY =  'yDem';
   whichX = 'xDem';
-  data = _.sortBy(data, 'demIndexCat')
+  data = _.sortBy(data, ['demIndexCat', 'heldDiff'])
   dataRectsPostponed = data.filter(d => d.werePostponed === 'yes' && d.heldAtAll === 'yes');
   monthsRaw = [];
   regimes = ["democracy","unclassified","authoritarian regime","hybrid regime"];
@@ -58,12 +59,13 @@ function step4() {
   dataPostponedBallots = data.filter(d => d.werePostponed === 'yes' && d.heldAtAll === 'yes');
   regimes = [];
   marginLeft = 300;
+  colorBallot = 'yes';
 
 }
 
 onMount(
   async () => {
-  const dataRaw = await csv('data/dataFinal5.csv', d => {
+  const dataRaw = await csv('data/dataFinal7.csv', d => {
     return {
     ...d,
     position: +d.position,
@@ -72,10 +74,12 @@ onMount(
     heldMonthYearDate: parseMonthYear(d.heldMonthYear),
     postponedMonthYearDate: parseMonthYear(d.postponedMonthYear),
     postponedMonthYearDate2: parseMonthYear(d.postponedMonthYear2),
+    heldDiff: d.heldMonthYearDate - d.postponedMonthYearDate,
+    heldDiff: +d.heldDiff
     }
   })
   data = dataRaw;
-  // console.log(data)
+  console.log(data)
 });
 
 onMount(resize)
@@ -126,7 +130,7 @@ onMount(() => {
 </section>
 <div id="intro-chart" bind:this={width} >
   <IntroChart data={updatedData} width={widthChart} {cancelledBallots} {whichY} {whichX} {dataRectsPostponed} {monthsRaw} {regimes}
-  constData={data} {dataPostponedBallots} {marginLeft}/>
+  constData={data} {dataPostponedBallots} {marginLeft} {colorBallot}/>
   <!-- <CancelledBallots {cancelledBallots} width={widthChart}/> -->
 
 </div>
@@ -155,7 +159,6 @@ h1 {
   text-align: center;
   margin-top: 40rem;
   margin-bottom: 2rem;
-  font-size: 2.5rem;
 }
 #intro-chart {
   margin: 0 auto;
@@ -175,7 +178,7 @@ h1 {
   margin-bottom: 85vh;
   margin-top: 20vh;
   position: relative;
-  background-color: #fff;
+  background-color: #f0e8e5;
   padding: 1em;
   line-height: 1.4;
   color: #414141;

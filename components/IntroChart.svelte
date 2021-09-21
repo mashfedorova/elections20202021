@@ -15,8 +15,11 @@ export let regimes;
 export let constData;
 export let dataPostponedBallots;
 export let marginLeft;
+export let colorBallot;
 
-$: margin = { top:20, right:100, bottom:20, left:marginLeft };
+const backgroundColor = "#f0e8e5";
+
+$: margin = { top:20, right:100, bottom:30, left:marginLeft };
 
 $: alldates = extent(constData, d => d.heldMonthYearDate)
 
@@ -49,11 +52,19 @@ $: xScaleTextReg = scaleOrdinal()
 
 $: yScaleTextReg = scaleOrdinal()
 .domain(regimes)
-.range([margin.top, height/1.5, margin.top, height/1.5])
+.range([margin.top-6, height/1.5, margin.top-6, height/1.5])
+
+$: ScaleColorReg = scaleOrdinal()
+.domain(regimes)
+.range(['#d9808c', '#709afa', '#22ab83', '#ccb693'])
 
 $: yScalePostponed = scaleBand()
 .domain(map(dataRectsPostponed, d => d.country))
-.range([height-margin.bottom, margin.top])
+.range([margin.top, height-margin.bottom])
+
+$: scaleOpacity = scaleLinear()
+.domain(extent(dataRectsPostponed, d => d.heldDiff))
+.range([0.1, 1])
 
 $: dataHeld = data.filter( d => d.werePostponed === 'no')
 $: dataPostponed = data.filter( d => d.werePostponed === 'yes')
@@ -88,7 +99,9 @@ return {
   xPost1: xScale(d.postponedMonthYearDate),
   yPost: yScalePostponed(d.country),
   yHeld: yScalePostponed(d.country),
-  country: d.country
+  reg: d.demIndexCat,
+  country: d.country,
+  opacityDiff: scaleOpacity(d.heldDiff)
 };
 });
 
@@ -115,10 +128,11 @@ return {
   yPost: yScalePostponed(d.country),
   yHeld: yScalePostponed(d.country),
   xHeld: xScale(d.heldMonthYearDate),
+  opacityDiff: scaleOpacity(d.heldDiff),
+  reg: d.demIndexCat,
   country: d.country,
 };
 });
-// $: console.log(dataPostponedDates)
 
 // $: dataPostponed = dataRectsPostponed.map(d => {
 // return {
@@ -131,8 +145,6 @@ return {
 // };
 // });
 
-$: console.log(dataPostponedDates)
-
 </script>
 <svg width={width} height={height}>
   {#each dataHeldCalc as d}
@@ -144,13 +156,13 @@ $: console.log(dataPostponedDates)
     <path
     d={d.d}
     stroke='#000'
-    fill= '#fff'
+    fill= {backgroundColor}
     stroke-width='2'
     ></path>
     <path
     d={d.d1}
     stroke='#000'
-    fill= '#fff'
+    fill= {backgroundColor}
     stroke-width='2'
     ></path>
     <!-- <g > -->
@@ -159,7 +171,7 @@ $: console.log(dataPostponedDates)
       cy=23
       r= {d.d4 ? 2 : 3}
       stroke='#000'
-      fill= '#fff'
+      fill= {backgroundColor}
       stroke-width='2'
       ></circle>
   <!-- </g> -->
@@ -168,14 +180,14 @@ $: console.log(dataPostponedDates)
 
 {#each dataPostponedDates as d}
         <line
-        in:fade="{{delay: 1000}}"
+        in:fade="{{delay: 850}}"
         x1={d.xPost1+23}
         x2={d.xHeld}
         y1={d.yPost+15}
         y2={d.yHeld+15}
-        stroke='blue'
+        stroke={ScaleColorReg(d.reg)}
         stroke-width='5'
-        stroke-opacity='0.2'
+        stroke-opacity={d.opacityDiff}
         ></line>
   {/each}
 
@@ -189,13 +201,13 @@ $: console.log(dataPostponedDates)
         <path
         d={d.d}
         stroke='#000'
-        fill= '#fff'
+        fill= {backgroundColor}
         stroke-width='2'
         ></path>
         <path
         d={d.d1}
         stroke='#000'
-        fill= '#fff'
+        fill= {backgroundColor}
         stroke-width='2'
         ></path>
           <circle
@@ -203,7 +215,7 @@ $: console.log(dataPostponedDates)
           cy=23
           r= {d.d4 ? 2 : 3}
           stroke='#000'
-          fill= '#fff'
+          fill= {backgroundColor}
           stroke-width='2'
           ></circle>
           <rect
@@ -211,8 +223,8 @@ $: console.log(dataPostponedDates)
               y={5}
               width="18"
               height="23"
-              fill="blue"
-              opacity="0.9"
+              fill={colorBallot === 'no' ? '#709afa' : ScaleColorReg(d.reg)}
+         n    opacity={colorBallot === 'no' ? '0.9' : d.opacityDiff}
               filter='url(#highlight)'>
           </rect>
       </g>
@@ -221,19 +233,19 @@ $: console.log(dataPostponedDates)
   {#each dataPostponedDates as d}
       <g class="animate"
       transform="translate({d.xPost1}, {d.yPost})"
-      in:fade="{{delay: 500}}"
+      in:fade="{{delay: 900}}"
       style="--x: {d.xPost1}px; --y: {d.yPost}px;"
       >
         <path
         d={d.d}
         stroke='#000'
-        fill= '#fff'
+        fill= {backgroundColor}
         stroke-width='2'
         ></path>
         <path
         d={d.d1}
         stroke='#000'
-        fill= '#fff'
+        fill= {backgroundColor}
         stroke-width='2'
         ></path>
           <circle
@@ -241,14 +253,14 @@ $: console.log(dataPostponedDates)
           cy=23
           r= {d.d4 ? 2 : 3}
           stroke='#000'
-          fill= '#fff'
+          fill= {backgroundColor}
           stroke-width='2'
           ></circle>
         </g>
         <text
-        in:fade="{{delay: 1000}}"
+        in:fade="{{delay: 100}}"
           x={200}
-          y={d.yPost+15}>
+          y={d.yPost+20}>
           {d.country}
         </text>
     {/each}
@@ -261,7 +273,7 @@ $: console.log(dataPostponedDates)
     {/each}
       {:else}
     {#each months as month }
-      <g class="tick" transform="translate({xScaleTicks(month)-modifier}, {height-margin.bottom+10})">
+      <g class="tick" transform="translate({xScaleTicks(month)-modifier}, {height-margin.bottom+20})">
         <text x="0" y="0" fill='#000' opacity='0.7' fade:in>{timeFormat("%b %y")(month)}</text>
       </g>
     {/each}
@@ -272,13 +284,13 @@ $: console.log(dataPostponedDates)
         <path
         d={d.d}
         stroke='#000'
-        fill= '#fff'
+        fill= {backgroundColor}
         stroke-width='2'
         ></path>
         <path
         d={d.d1}
         stroke='#000'
-        fill= '#fff'
+        fill= {backgroundColor}
         stroke-width='2'
         ></path>
         <!-- <g transform="translate({d[whichX]}, {d[whichY]})"> -->
@@ -287,7 +299,7 @@ $: console.log(dataPostponedDates)
           cy=23
           r= {d.d4 ? 2 : 3}
           stroke='#000'
-          fill= '#fff'
+          fill= {backgroundColor}
           stroke-width='2'
           ></circle>
           <rect
@@ -295,15 +307,13 @@ $: console.log(dataPostponedDates)
           y="5"
           width="18"
           height="23"
-          fill="plum"
-          opacity="0.9"
+          fill="#89848a"
+          opacity="0.8"
           filter='url(#highlight)'>
           </rect>
         <!-- </g> -->
       </g>
     {/each}
-
-
 
     {#each regimes as d}
       <text class="regimes" x={xScaleTextReg(d)} y={yScaleTextReg(d)} in:fade="{{duration: 500, delay: 900}}">{d}</text>
@@ -322,9 +332,14 @@ svg {
   /* margin: 0 auto; */
 }
 	.animate {
-	transform: translate(var(--x), var(--y));
-  transition: transform 1s ease-out;
+    transform: translate(var(--x), var(--y));
+    transition: transform 1s ease-out;
 	}
+
+  /* .animateHeld {
+    transform: translate(var(--x), var(--y));
+    transition: transform 2s ease-out;
+  } */
 
   .regimes {
     letter-spacing: 0.2em;

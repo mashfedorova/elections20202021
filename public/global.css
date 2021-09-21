@@ -1,7 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alegreya+Sans&display=swap');
 * {
   box-sizing: border-box;
 }
 
+body {
+  background-color: #f0e8e5;
+  font-family: 'Alegreya Sans', sans-serif;
+}
+
+h1 {
+  font-family: 'Noto Serif', serif;
+    font-size: 2.8rem;
+}
 /* html, body {
 	position: relative;
 	width: 100%;
