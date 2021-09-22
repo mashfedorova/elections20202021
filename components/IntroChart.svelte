@@ -1,7 +1,8 @@
 <script>
 import { scaleTime, scaleLinear, extent, max, timeFormat, timeParse, scaleBand, scaleOrdinal, map} from 'd3';
 import { detach_dev } from 'svelte/internal';
-import { fade } from 'svelte/transition'
+import { fade } from 'svelte/transition';
+
 export let data;
 export let width = 0;
 export let cancelledBallots;
@@ -16,6 +17,7 @@ export let constData;
 export let dataPostponedBallots;
 export let marginLeft;
 export let colorBallot;
+export let highlighApr;
 
 const backgroundColor = "#f0e8e5";
 
@@ -69,6 +71,7 @@ $: scaleOpacity = scaleLinear()
 $: dataHeld = data.filter( d => d.werePostponed === 'no')
 $: dataPostponed = data.filter( d => d.werePostponed === 'yes')
 
+
 $: dataHeldCalc = dataHeld.map(d => {
 return {
   x: xScale(d.heldMonthYearDate),
@@ -81,7 +84,8 @@ return {
   postponed: d.werePostponed,
   xPost1: xScale(d.postponedMonthYearDate),
   yPost: yScalePostponed(d.country),
-  country: d.country
+  country: d.country,
+  opacity: highlighApr === 'no' ? '1' : highlighApr === 'yes' && d.heldMonth === 'April' && d.heldYear === '2020'  ? '1' : highlighApr === 'yes' && d.heldMonth !== 'April' && d.heldYear !== '2020' ? '0.2' : d.heldAtAll === 'no' ? '1' : '0.2'
 };
 });
 
@@ -101,7 +105,8 @@ return {
   yHeld: yScalePostponed(d.country),
   reg: d.demIndexCat,
   country: d.country,
-  opacityDiff: scaleOpacity(d.heldDiff)
+  opacityDiff: scaleOpacity(d.heldDiff),
+  opacity: highlighApr === 'no' ? '1' : highlighApr === 'yes' && d.heldMonth === 'April' && d.heldYear === '2020'  ? '1' : highlighApr === 'yes' && d.heldMonth !== 'April' && d.heldYear !== '2020' ? '0.2' : d.heldAtAll === 'no' ? '1' : '0.2'
 };
 });
 
@@ -134,17 +139,6 @@ return {
 };
 });
 
-// $: dataPostponed = dataRectsPostponed.map(d => {
-// return {
-//   x: xScale(d.heldMonthYearDate),
-//   y: yScale(d.position),
-//   yDem: yScaleDem(d.demIndexScaleY),
-//   xDem: xScaleDem(d.demIndexScaleX),
-//   xPost1: xScale(d.postponedMonthYearDate),
-//   yPost: yScalePostponed(d.country)
-// };
-// });
-
 </script>
 <svg width={width} height={height}>
   {#each dataHeldCalc as d}
@@ -158,12 +152,14 @@ return {
     stroke='#000'
     fill= {backgroundColor}
     stroke-width='2'
+    opacity={d.opacity}
     ></path>
     <path
     d={d.d1}
     stroke='#000'
     fill= {backgroundColor}
     stroke-width='2'
+    opacity={d.opacity}
     ></path>
     <!-- <g > -->
       <circle
@@ -173,6 +169,7 @@ return {
       stroke='#000'
       fill= {backgroundColor}
       stroke-width='2'
+      opacity={d.opacity}
       ></circle>
   <!-- </g> -->
 </g>
@@ -180,7 +177,7 @@ return {
 
 {#each dataPostponedDates as d}
         <line
-        in:fade="{{delay: 850}}"
+        in:fade="{{duration:100, delay: 500}}"
         x1={d.xPost1+23}
         x2={d.xHeld}
         y1={d.yPost+15}
@@ -190,7 +187,6 @@ return {
         stroke-opacity={d.opacityDiff}
         ></line>
   {/each}
-
 
   {#each dataPostponedCalc as d}
       <g class="animate"
@@ -203,12 +199,14 @@ return {
         stroke='#000'
         fill= {backgroundColor}
         stroke-width='2'
+        opacity={d.opacity}
         ></path>
         <path
         d={d.d1}
         stroke='#000'
         fill= {backgroundColor}
         stroke-width='2'
+        opacity={d.opacity}
         ></path>
           <circle
           cx={d.d4 ? 9 : 8}
@@ -217,6 +215,7 @@ return {
           stroke='#000'
           fill= {backgroundColor}
           stroke-width='2'
+          opacity={d.opacity}
           ></circle>
           <rect
               x={3}
@@ -224,16 +223,17 @@ return {
               width="18"
               height="23"
               fill={colorBallot === 'no' ? '#709afa' : ScaleColorReg(d.reg)}
-         n    opacity={colorBallot === 'no' ? '0.9' : d.opacityDiff}
+              opacity={highlighApr === 'yes' ? 0.5 : colorBallot === 'no' ? '0.9' : d.opacityDiff}
               filter='url(#highlight)'>
           </rect>
       </g>
     {/each}
 
+
   {#each dataPostponedDates as d}
       <g class="animate"
       transform="translate({d.xPost1}, {d.yPost})"
-      in:fade="{{delay: 900}}"
+      in:fade="{{duration: 100, delay: 500}}"
       style="--x: {d.xPost1}px; --y: {d.yPost}px;"
       >
         <path
@@ -280,7 +280,7 @@ return {
     {/if}
 
     {#each cancelledBallotsData as d}
-      <g class="animate" style="--x: {d[whichX]}px; --y: {d[whichY]}px;" in:fade="{{duration: 1000}}" out:fade="{{duration: 100}}">
+      <g class="animate" style="--x: {d[whichX]}px; --y: {d[whichY]}px;" in:fade="{{duration: 500}}" out:fade="{{duration: 100}}">
         <path
         d={d.d}
         stroke='#000'
@@ -316,7 +316,7 @@ return {
     {/each}
 
     {#each regimes as d}
-      <text class="regimes" x={xScaleTextReg(d)} y={yScaleTextReg(d)} in:fade="{{duration: 500, delay: 900}}">{d}</text>
+      <text class="regimes" x={xScaleTextReg(d)} y={yScaleTextReg(d)} in:fade="{{duration: 200, delay: 500}}">{d}</text>
     {/each}
 
       <filter id="highlight">
@@ -333,7 +333,7 @@ svg {
 }
 	.animate {
     transform: translate(var(--x), var(--y));
-    transition: transform 1s ease-out;
+    transition: transform 0.6s ease-out;
 	}
 
   /* .animateHeld {
@@ -347,6 +347,10 @@ svg {
 
   rect {
     transition: all 1s;
+  }
+
+  path, circle, rect {
+    transition: all 0.5s;
   }
 
 </style>
