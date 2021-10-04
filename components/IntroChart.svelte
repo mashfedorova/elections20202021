@@ -18,6 +18,9 @@ export let dataPostponedBallots;
 export let marginLeft;
 export let colorBallot;
 export let highlighApr;
+export let legend;
+export let opacityValue;
+export let highlightLines;
 
 const backgroundColor = "#f0e8e5";
 
@@ -46,7 +49,7 @@ $: xScaleDem = scaleLinear()
 
 $: yScaleDem = scaleLinear()
 .domain(extent(data, d => d.demIndexScaleY))
-.range([marginDem.top, height-marginDem.bottom,])
+.range([marginDem.top, height-marginDem.bottom])
 
 $: xScaleTextReg = scaleOrdinal()
 .domain(regimes)
@@ -58,7 +61,7 @@ $: yScaleTextReg = scaleOrdinal()
 
 $: ScaleColorReg = scaleOrdinal()
 .domain(regimes)
-.range(['#d9808c', '#709afa', '#22ab83', '#ccb693'])
+.range(['#a9b9de', '#709afa', '#22ab83', '#ccb693'])
 
 $: yScalePostponed = scaleBand()
 .domain(map(dataRectsPostponed, d => d.country))
@@ -70,7 +73,6 @@ $: scaleOpacity = scaleLinear()
 
 $: dataHeld = data.filter( d => d.werePostponed === 'no')
 $: dataPostponed = data.filter( d => d.werePostponed === 'yes')
-
 
 $: dataHeldCalc = dataHeld.map(d => {
 return {
@@ -85,7 +87,8 @@ return {
   xPost1: xScale(d.postponedMonthYearDate),
   yPost: yScalePostponed(d.country),
   country: d.country,
-  opacity: highlighApr === 'no' ? '1' : highlighApr === 'yes' && d.heldMonth === 'April' && d.heldYear === '2020'  ? '1' : highlighApr === 'yes' && d.heldMonth !== 'April' && d.heldYear !== '2020' ? '0.2' : d.heldAtAll === 'no' ? '1' : '0.2'
+  opacity: highlighApr === 'no' ? '1' : highlighApr === 'yes' && d.heldMonth === 'April' && d.heldYear === '2020'  ? '1' :  '0.2',
+  opFadeout: '0.2'
 };
 });
 
@@ -106,7 +109,10 @@ return {
   reg: d.demIndexCat,
   country: d.country,
   opacityDiff: scaleOpacity(d.heldDiff),
-  opacity: highlighApr === 'no' ? '1' : highlighApr === 'yes' && d.heldMonth === 'April' && d.heldYear === '2020'  ? '1' : highlighApr === 'yes' && d.heldMonth !== 'April' && d.heldYear !== '2020' ? '0.2' : d.heldAtAll === 'no' ? '1' : '0.2'
+  opacity: highlighApr === 'no' ? '1' : highlighApr === 'yes' && d.heldMonth === 'April' && d.heldYear === '2020'  ? '1' : '0.2',
+  opacityLines: highlightLines === 'no' ? '1' : d.country === 'Ethiopia' ? '1' : '0.3',
+  opFadeout: '0.2'
+
 };
 });
 
@@ -119,6 +125,8 @@ return {
   d4: d.d4,
   yDem: yScaleDem(d.demIndexScaleY),
   xDem: xScaleDem(d.demIndexScaleX),  country: d.country,
+  opacityLines: highlightLines === 'no' ? '1' : d.country === 'Ethiopia' ? '1' : '0.3'
+
 };
 });
 
@@ -136,8 +144,12 @@ return {
   opacityDiff: scaleOpacity(d.heldDiff),
   reg: d.demIndexCat,
   country: d.country,
+  opacityLines: highlightLines === 'no' ? '1' : d.country === 'Ethiopia' ? '1' : '0.3'
+
 };
 });
+
+$: console.log(regimes)
 
 </script>
 <svg width={width} height={height}>
@@ -152,14 +164,14 @@ return {
     stroke='#000'
     fill= {backgroundColor}
     stroke-width='2'
-    opacity={d.opacity}
+    opacity={d[opacityValue]}
     ></path>
     <path
     d={d.d1}
     stroke='#000'
     fill= {backgroundColor}
     stroke-width='2'
-    opacity={d.opacity}
+    opacity={d[opacityValue]}
     ></path>
     <!-- <g > -->
       <circle
@@ -169,7 +181,7 @@ return {
       stroke='#000'
       fill= {backgroundColor}
       stroke-width='2'
-      opacity={d.opacity}
+      opacity={d[opacityValue]}
       ></circle>
   <!-- </g> -->
 </g>
@@ -184,7 +196,8 @@ return {
         y2={d.yHeld+15}
         stroke={ScaleColorReg(d.reg)}
         stroke-width='5'
-        stroke-opacity={d.opacityDiff}
+        stroke-opacity={highlightLines === 'no' ? d.opacityDiff : highlightLines === 'yes' && d.country === 'Ethiopia' ? d.opacityDiff : d.opacityLines }
+        opacity={d[opacityValue]}
         ></line>
   {/each}
 
@@ -199,14 +212,14 @@ return {
         stroke='#000'
         fill= {backgroundColor}
         stroke-width='2'
-        opacity={d.opacity}
+        opacity={d[opacityValue]}
         ></path>
         <path
         d={d.d1}
         stroke='#000'
         fill= {backgroundColor}
         stroke-width='2'
-        opacity={d.opacity}
+        opacity={d[opacityValue]}
         ></path>
           <circle
           cx={d.d4 ? 9 : 8}
@@ -215,7 +228,7 @@ return {
           stroke='#000'
           fill= {backgroundColor}
           stroke-width='2'
-          opacity={d.opacity}
+          opacity={d[opacityValue]}
           ></circle>
           <rect
               x={3}
@@ -241,12 +254,14 @@ return {
         stroke='#000'
         fill= {backgroundColor}
         stroke-width='2'
+        opacity={d[opacityValue]}
         ></path>
         <path
         d={d.d1}
         stroke='#000'
         fill= {backgroundColor}
         stroke-width='2'
+        opacity={d[opacityValue]}
         ></path>
           <circle
           cx={d.d4 ? 9 : 8}
@@ -255,10 +270,12 @@ return {
           stroke='#000'
           fill= {backgroundColor}
           stroke-width='2'
+          opacity={d[opacityValue]}
           ></circle>
         </g>
         <text
         in:fade="{{delay: 100}}"
+        opacity={d[opacityValue]}
           x={200}
           y={d.yPost+20}>
           {d.country}
@@ -319,9 +336,16 @@ return {
       <text class="regimes" x={xScaleTextReg(d)} y={yScaleTextReg(d)} in:fade="{{duration: 200, delay: 500}}">{d}</text>
     {/each}
 
-      <filter id="highlight">
-        <feGaussianBlur stdDeviation="7 7"/>
-      </filter>
+      {#if legend === 'yes'}
+        <text class="post-label" transition:fade="{{delay: 600, duration: 100}}" x="26%" y="10"> postponed</text>
+        <text class="post-label" transition:fade="{{delay: 600, duration: 100}}" x="41.5%" y="10"> held</text>
+      {/if}
+
+      <defs>
+        <filter id="highlight">
+          <feGaussianBlur stdDeviation="7 7"/>
+        </filter>
+      </defs>
   </svg>
 <style>
 .tick-small {
@@ -349,8 +373,14 @@ svg {
     transition: all 1s;
   }
 
-  path, circle, rect {
+  path, circle, rect, line, text {
     transition: all 0.5s;
+  }
+
+  .post-label {
+    letter-spacing: 0.1em;
+    fill: rgb(117, 117, 117)
+
   }
 
 </style>
