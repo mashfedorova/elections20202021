@@ -15,6 +15,8 @@
 
   $: height = width/4;
 
+  $: console.log(data)
+
   $: xScaleTurnout = scaleLinear()
   .domain(extent(data, d => d.turnout_reg_votes))
   .range([margin.left, width - margin.right])
@@ -31,7 +33,6 @@
     .domain(regimes)
     .range(['#99afe0', 'none', '#cf7480', 'none'])
 
-    $: console.log(colorScale('democracy'))
 
   $: dataCalc = data.map(d => {
     return {

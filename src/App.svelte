@@ -208,32 +208,70 @@ onMount(() => {
     <p>Non-democratic regimes tended to postpone elections for a longer. While on average <span class="dem">democracies</span> postponed elections for approximately two months, <span class="aut">autocracies</span> and <span class="hyb">hybrid regimes</span> postponed electons on average for four months.</p>
   </section>
   <section class="step" id="step-6">
-    <p><strong>Ethiopia</strong> postponed parlamentary elections mutltiple times and for the longest period, for about ten months. In the end of August, when elections were originally scheduled 1,500 COVID-19 cases were recoded in the country, one of the highest numbers during the pandemic up to this date. The <a href="https://www.aljazeera.com/opinions/2021/6/18/why-ethiopias-elections-should-be-postponed">postponement</a> of elections, done unilaterally by the countries prime minister Abiy Ahmed was met with critisism by his opponents. </p>
+    <p><strong>Ethiopia</strong> postponed parlamentary elections mutltiple times and for the longest period, for about ten months. In the end of August, when elections were originally scheduled 1,500 COVID-19 cases were recoded in the country,  one of the highest numbers during the pandemic up to this date. The <a href="https://www.aljazeera.com/opinions/2021/6/18/why-ethiopias-elections-should-be-postponed">postponement</a> of elections, done unilaterally by the countries prime minister Abiy Ahmed was met with critisism by his opponents. </p>
   </section>
-  <section id="turnout-intro">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet, fugiat dolores. Quo officia facere tenetur dicta eligendi dolore esse consectetur eos quis iusto eveniet nesciunt, dolorum aliquam repudiandae dignissimos provident!</section>
-  <div id="turnout-chart" bind:this={width} >
-    <TurnoutChart data={dataTurnout} width={widthChart} x={xTurnout} xTicks = {xTicksTurn}/>
-  </div>
-  <div id="turnout-chart" bind:this={width} >
-    <TurnoutChart data={dataTurnoutDiff} width={widthChart} x={xTurnoutDiff} xTicks = {xTicksDiff}/>
-  </div>
+  <section id="turnout-intro">
+    <h2>How electoral participation changed during the pandemic?</h2>
+      <p class="para turnout">
+        With the pandemic affecting electoral calendars across the globe and political spectrum, has voter turnout experienced any changes? External shocks could potentially influence voter turnout in two ways: (1) by increasing the cost of voting, leading to less people showing up at the voting booths or (2) by having a mobilizing effect.
+      </p>
+      <p class="para turnout">
+        The data shows that, in general, turnout has not declined since the start of 2020 in comparison to elections held before. On average, turnout was 60%. There were a few countries with quite low turnout.
+      </p>
+      <p class="para turnout">
+        One example would be Algeria, where a referendum proposing constitutional changes was held in November 2020. Many <a href="https://www.aljazeera.com/news/2020/11/1/algeria-votes-on-referendum-aimed-at-ending-protest-movement">critisized</a> the referendum, pointing out that country's ultra presedential regime will not change. The oppostion movement called for a boycott of the vote.
+      </p>
+      <p class="para turnout">
+        Egypt held <a href="https://www.economist.com/middle-east-and-africa/2020/09/03/egypt-looks-to-prosecute-millions-of-non-voters">elections</a> of the members of the Upper House that has no legislative powers, with only a  third of members being elected directly. While similar to previous election, turnout was lower then elections held in 2011-2012, proclaimed to be the first democratic elections in the country.
+      </p>
+      <p class="para turnout">
+        Several elections attracted much more voters than previous elections despite the pandemic. Burundi hold elections to replace President Pierre Nkurunziza, who had ruled the country for 15 years. A <a href="https://www.nytimes.com/2020/05/20/world/africa/burundi-election.html">competitive</a> race to elect a new president was characterized by widespread violence.
+      </p>
+      <p class="para turnout">
+        South Korea was one of the first countries to hold elections during the pandemic. Government's uccessful handling of the crisis brought it a landslide victory with the highest turnout since 1996.
+      </p>
+      <p class="para turnout">
+        Dominican Republic hold general elections in July 2020, one of the first countries to hold elections during the pandemic in the Americas. On the elections day, 1,036 COVID cases were registered cases, with the cumulative highest number of cases up to that moment.
+      </p>
+    <div class="turnout-chart" bind:this={width}>
+      <TurnoutChart data={dataTurnout} width={widthChart} x={xTurnout} xTicks = {xTicksTurn}/>
+    </div>
+    <div class="turnout-chart" bind:this={width} >
+      <TurnoutChart data={dataTurnoutDiff} width={widthChart} x={xTurnoutDiff} xTicks = {xTicksDiff}/>
+    </div>
+  </section>
 </article>
 
 <style>
+
 .intro {
   margin: 0 auto;
   max-width: 650px;
 }
 
 .intro-para {
-text-align: center;
-font-size: 1.2rem;
+  text-align: center;
+  font-size: 1.2rem;
 }
 
 h1 {
   text-align: center;
   margin-top: 40rem;
   margin-bottom: 2rem;
+}
+
+#turnout-intro {
+  margin: 0 auto;
+  max-width: 700px;
+}
+
+ h2 {
+  text-align: left;
+ }
+
+.para {
+  font-size: 1.2em;
+  line-height: 1.4;
 }
 
 #intro-chart {
@@ -246,7 +284,7 @@ h1 {
   height: 100vh;
 }
 
-#turnout-chart{
+.turnout-chart{
   margin: 0 auto;
   /* max-width: 1200px; */
   display: flex;
@@ -268,12 +306,13 @@ h1 {
   background-color: #f0e8e5;
   padding: 1em;
   line-height: 1.4;
-  color: #414141;
   font-size: 1.2rem;
 }
+
 #step-1 {
   margin-top: 0;
 }
+
 
 .postponed {
   background: rgb(112, 153, 250, 0.4);
@@ -299,8 +338,6 @@ h1 {
    /* bottom: 0.90em; */
    /* top: 0.60em; */
    /* vertical-align: bottom; */
-
-
 }
 
 .aut {

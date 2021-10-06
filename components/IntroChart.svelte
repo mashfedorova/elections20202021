@@ -61,7 +61,7 @@ $: yScaleTextReg = scaleOrdinal()
 
 $: ScaleColorReg = scaleOrdinal()
 .domain(regimes)
-.range(['#a9b9de', '#709afa', '#22ab83', '#ccb693'])
+.range(['#d68993', '#709afa', '#22ab83', '#ccb693'])
 
 $: yScalePostponed = scaleBand()
 .domain(map(dataRectsPostponed, d => d.country))
@@ -148,8 +148,6 @@ return {
 
 };
 });
-
-$: console.log(regimes)
 
 </script>
 <svg width={width} height={height}>
