@@ -180,7 +180,7 @@ onMount(() => {
 <section class="intro">
   <h1> Elections between 2020 and July 2021</h1>
   <!-- <h1> Text</h1> -->
-  <p class="intro-para">Between March 2020, when WHO has <a href='https://www.euro.who.int/en/health-topics/health-emergencies/coronavirus-covid-19/news/news/2020/3/who-announces-covid-19-outbreak-a-pandemic'>declared</a> coronavirus (COVID-19) outbreak a global pandemic and June 2021. Between March 2020 and June 2021, elections were held in 75 countries. In total, 88 elections were held, with 12 countries having held multiple elections during this period. Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae ea tenetur exercitationem, voluptatem quo temporibus aliquid optio suscipit, veniam pariatur quaerat natus at. Ab vitae iusto dolor voluptas officiis eaque libero reiciendis quas voluptates perferendis ratione, odio corrupti omnis tempora quo a? Amet ducimus laborum ipsum quidem consequatur, vitae ex nihil dolore accusamus tempora, iusto hic culpa vero, doloremque eos.</p>
+  <p class="intro-para">Between March 2020, when WHO has <a href='https://www.euro.who.int/en/health-topics/health-emergencies/coronavirus-covid-19/news/news/2020/3/who-announces-covid-19-outbreak-a-pandemic' target="_blank">declared</a> coronavirus (COVID-19) outbreak a global pandemic and June 2021. Between March 2020 and June 2021, elections were held in 75 countries. In total, 88 elections were held, with 12 countries having held multiple elections during this period. Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae ea tenetur exercitationem, voluptatem quo temporibus aliquid optio suscipit, veniam pariatur quaerat natus at. Ab vitae iusto dolor voluptas officiis eaque libero reiciendis quas voluptates perferendis ratione, odio corrupti omnis tempora quo a? Amet ducimus laborum ipsum quidem consequatur, vitae ex nihil dolore accusamus tempora, iusto hic culpa vero, doloremque eos.</p>
 </section>
 <div id="intro-chart" bind:this={width} >
   <IntroChart data={updatedData} width={widthChart} {cancelledBallots} {whichY} {whichX} {dataRectsPostponed} {monthsRaw} {regimes}
@@ -194,12 +194,12 @@ onMount(() => {
   </section>
   <section class="step" id="step-2">
     <p>In April 2020, a month after WHO declared COVID-19 outbreak a pandemic many countries decided to cancel scheduled elections. Only two countries - Kiribati and South Korea - held elections nevertheless. </p>
-    <p><strong>South Korea</strong> was widely <a href="https://aceproject.org/ero-en/misc/elections-and-covid-19-technical-paper-by">praised </a>for measures implemented during the elections. Early voting was encouraged, home voting provisions were extended, and stringent measures were implemented at the polling stations. Public approval of the governemnt's handling of the pandemic was evident in a landslide victory of President Moon Jae-in’s governing party in parliamentary elections.</p>
-    <p><strong>Kiribati</strong> went ahead with parliamentary elections, after having postpone them for a week because of disrupted public services. At the time of elections, however, there were no official cases of COVID-19 <a href='https://www.rnz.co.nz/international/pacific-news/414192/kiribati-goes-to-polls-as-normal-despite-covid-19-threat'>recoded</a>.</p>
+    <p><strong>South Korea</strong> was widely <a href="https://aceproject.org/ero-en/misc/elections-and-covid-19-technical-paper-by" target="_blank">praised </a>for measures implemented during the elections. Early voting was encouraged, home voting provisions were extended, and stringent measures were implemented at the polling stations. Public approval of the governemnt's handling of the pandemic was evident in a landslide victory of President Moon Jae-in’s governing party in parliamentary elections.</p>
+    <p><strong>Kiribati</strong> went ahead with parliamentary elections, after having postpone them for a week because of disrupted public services. At the time of elections, however, there were no official cases of COVID-19 <a href='https://www.rnz.co.nz/international/pacific-news/414192/kiribati-goes-to-polls-as-normal-despite-covid-19-threat' target="_blank">recoded</a>.</p>
   </section>
   <section class="step" id="step-3">
     <p>Four countries - Chad, Haiti, Somalia and Armenia - postponed elections and to the momement of publication have not yet held these elections.</p>
-    <p> Some of these countries had more reasons to postpone elections than others. Armenia declared a state of emergency, having the highest number of COVID-19 cases among countries in the South Caucasus region. Parlamentary elections in Chad, originally scheduled in 2015 had been <a href="https://www.dw.com/en/chad-tensions-rise-over-debys-presidential-run/a-56536855">repeatedly</a> postponed even before the pandemic. President Idriss Deby has ruled Chad for the past 30 years. </p>
+    <p> Some of these countries had more reasons to postpone elections than others. Armenia declared a state of emergency, having the highest number of COVID-19 cases among countries in the South Caucasus region. Parlamentary elections in Chad, originally scheduled in 2015 had been <a href="https://www.dw.com/en/chad-tensions-rise-over-debys-presidential-run/a-56536855" target="_blank">repeatedly</a> postponed even before the pandemic. President Idriss Deby has ruled Chad for the past 30 years. </p>
   </section>
   <section class="step" id="step-4">
     <p>Elections were postponed in democracratic regimes, as well as in authoritarian. However, twice as many democracies postponed elections as autocracies. While democracies always held postponed elections later, non-democratic regimes had a tendency of postponing elections indefinitely. </p>
@@ -208,29 +208,29 @@ onMount(() => {
     <p>Non-democratic regimes tended to postpone elections for a longer. While on average <span class="dem">democracies</span> postponed elections for approximately two months, <span class="aut">autocracies</span> and <span class="hyb">hybrid regimes</span> postponed electons on average for four months.</p>
   </section>
   <section class="step" id="step-6">
-    <p><strong>Ethiopia</strong> postponed parlamentary elections mutltiple times and for the longest period, for about ten months. In the end of August, when elections were originally scheduled 1,500 COVID-19 cases were recoded in the country,  one of the highest numbers during the pandemic up to this date. The <a href="https://www.aljazeera.com/opinions/2021/6/18/why-ethiopias-elections-should-be-postponed">postponement</a> of elections, done unilaterally by the countries prime minister Abiy Ahmed was met with critisism by his opponents. </p>
+    <p><strong>Ethiopia</strong> postponed parlamentary elections mutltiple times and for the longest period, for about ten months. In the end of August, when elections were originally scheduled 1,500 COVID-19 cases were recoded in the country,  one of the highest numbers during the pandemic up to this date. The <a href="https://www.aljazeera.com/opinions/2021/6/18/why-ethiopias-elections-should-be-postponed" target="_blank">postponement</a> of elections, done unilaterally by the countries prime minister Abiy Ahmed was met with critisism by his opponents. </p>
   </section>
   <section id="turnout-intro">
     <h2>How electoral participation changed during the pandemic?</h2>
-      <p class="para turnout">
-        With the pandemic affecting electoral calendars across the globe and political spectrum, has voter turnout experienced any changes? External shocks could potentially influence voter turnout in two ways: (1) by increasing the cost of voting, leading to less people showing up at the voting booths or (2) by having a mobilizing effect.
+      <p class="para">
+        With the pandemic affecting electoral calendars across the globe and political spectrum, has voter turnout<span class="tooltip">*<span class="tooltiptext">Turnout is defined as percentage of registered voters who participated in election</span></span> experienced any changes? External shocks could potentially influence voter turnout in two ways: (1) by increasing the cost of voting, leading to less people showing up at the voting booths or (2) by having a mobilizing effect.
       </p>
-      <p class="para turnout">
+      <p class="para">
         The data shows that, in general, turnout has not declined since the start of 2020 in comparison to elections held before. On average, turnout was 60%. There were a few countries with quite low turnout.
       </p>
-      <p class="para turnout">
-        One example would be Algeria, where a referendum proposing constitutional changes was held in November 2020. Many <a href="https://www.aljazeera.com/news/2020/11/1/algeria-votes-on-referendum-aimed-at-ending-protest-movement">critisized</a> the referendum, pointing out that country's ultra presedential regime will not change. The oppostion movement called for a boycott of the vote.
+      <p class="para">
+        One example would be Algeria, where a referendum proposing constitutional changes was held in November 2020. Many <a href="https://www.aljazeera.com/news/2020/11/1/algeria-votes-on-referendum-aimed-at-ending-protest-movement" target="_blank">critisized</a> the referendum, pointing out that country's ultra presedential regime will not change. The oppostion movement called for a boycott of the vote.
       </p>
-      <p class="para turnout">
-        Egypt held <a href="https://www.economist.com/middle-east-and-africa/2020/09/03/egypt-looks-to-prosecute-millions-of-non-voters">elections</a> of the members of the Upper House that has no legislative powers, with only a  third of members being elected directly. While similar to previous election, turnout was lower then elections held in 2011-2012, proclaimed to be the first democratic elections in the country.
+      <p class="para">
+        Egypt held <a href="https://www.economist.com/middle-east-and-africa/2020/09/03/egypt-looks-to-prosecute-millions-of-non-voters" target="_blank">elections</a> of the members of the Upper House that has no legislative powers, with only a  third of members being elected directly. While similar to previous election, turnout was lower then elections held in 2011-2012, proclaimed to be the first democratic elections in the country.
       </p>
-      <p class="para turnout">
-        Several elections attracted much more voters than previous elections despite the pandemic. Burundi hold elections to replace President Pierre Nkurunziza, who had ruled the country for 15 years. A <a href="https://www.nytimes.com/2020/05/20/world/africa/burundi-election.html">competitive</a> race to elect a new president was characterized by widespread violence.
+      <p class="para">
+        Several elections attracted much more voters than previous elections despite the pandemic. Burundi hold elections to replace President Pierre Nkurunziza, who had ruled the country for 15 years. A <a href="https://www.nytimes.com/2020/05/20/world/africa/burundi-election.html" target="_blank">competitive</a> race to elect a new president was characterized by widespread violence.
       </p>
-      <p class="para turnout">
+      <p class="para">
         South Korea was one of the first countries to hold elections during the pandemic. Government's uccessful handling of the crisis brought it a landslide victory with the highest turnout since 1996.
       </p>
-      <p class="para turnout">
+      <p class="para">
         Dominican Republic hold general elections in July 2020, one of the first countries to hold elections during the pandemic in the Americas. On the elections day, 1,036 COVID cases were registered cases, with the cumulative highest number of cases up to that moment.
       </p>
     <div class="turnout-chart" bind:this={width}>
@@ -270,7 +270,7 @@ h1 {
  }
 
 .para {
-  font-size: 1.2em;
+  font-size: 1.2rem;
   line-height: 1.4;
 }
 
@@ -368,21 +368,38 @@ h1 {
 }
 
 a {
- color: rgb(97, 94, 92)}
+ color: rgb(97, 94, 92)
+}
 
-/*
- scroll-text__div {
-    margin-left: 0;
-    background-color: #fff;
-    border: 2px solid #000;
-    box-shadow: 4px 4px 0 0 #767676;
-    padding: 6px 10px;
-    padding-bottom: 0;
-    font-size: 28px;
-    line-height: 32px;
-    font-weight: 400;
-    font-size: 20px;
-    line-height: 26px;
-    padding-top: 4px;
-} */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  color:rgb(218, 118, 221);
+  cursor: pointer;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 200px;
+  background-color: #414141;
+  color: #f0e8e5;
+  text-align: center;
+  border-radius: 6px;
+  padding: 10px 10px;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -125px;
+}
+
+.tooltiptext {
+    font-size: 0.8em;
+}
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
 </style>
