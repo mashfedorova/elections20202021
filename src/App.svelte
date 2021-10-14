@@ -10,6 +10,7 @@ import { csv, timeParse} from 'd3';
 import { onMount } from 'svelte';
 import IntroChart from '../components/IntroChart.svelte';
 import TurnoutChart from '../components/TurnoutChart.svelte';
+import TurnoutStringency from '../components/TurnoutStringency.svelte';
 import  {_} from 'lodash';
 gsap.registerPlugin(ScrollTrigger);
 
@@ -40,6 +41,7 @@ let dataTurnout = [];
 let dataTurnoutDiff = [];
 let xTicksTurn = 'turnout';
 let xTicksDiff = 'difference';
+let dataTurnoutStringency = [];
 
 function resize() {
    width = document.body.clientWidth
@@ -106,7 +108,7 @@ onMount(
     }
   })
   data = dataRaw;
-  dataTurnout = dataRaw.filter(d => d.turnout_reg_votes)
+  dataTurnout = dataRaw.filter(d => d.turnout_reg_votes);
   dataTurnoutDiff = _.chain(data.filter(d => !!d.turnoutDiff))
     .map((d) => {
       return {
@@ -118,6 +120,18 @@ onMount(
 
       }
     }).value()
+  const dataTurnoutStringencyCalc = _.chain(dataRaw.filter(d => d.turnout_reg_votes && d.stringency_index))
+    .map((d) => {
+      return {
+        stringency_index: +d.stringency_index,
+        turnout_reg_votes: d.turnout_reg_votes,
+        country: d.country,
+        d: d.d,
+        d1: d.d1,
+        d4: d.d4,
+      }
+    }).value()
+  dataTurnoutStringency = dataTurnoutStringencyCalc;
 });
 
 onMount(resize)
@@ -210,7 +224,7 @@ onMount(() => {
   <section class="step" id="step-6">
     <p><strong>Ethiopia</strong> postponed parlamentary elections mutltiple times and for the longest period, for about ten months. In the end of August, when elections were originally scheduled 1,500 COVID-19 cases were recoded in the country,  one of the highest numbers during the pandemic up to this date. The <a href="https://www.aljazeera.com/opinions/2021/6/18/why-ethiopias-elections-should-be-postponed" target="_blank">postponement</a> of elections, done unilaterally by the countries prime minister Abiy Ahmed was met with critisism by his opponents. </p>
   </section>
-  <section id="turnout-intro">
+  <section class="textblocks">
     <h2>How electoral participation changed during the pandemic?</h2>
       <p class="para">
         With the pandemic affecting electoral calendars across the globe and political spectrum, has voter turnout<span class="tooltip">*<span class="tooltiptext">Turnout is defined as percentage of registered voters who participated in election</span></span> experienced any changes? External shocks could potentially influence voter turnout in two ways: (1) by increasing the cost of voting, leading to less people showing up at the voting booths or (2) by having a mobilizing effect.
@@ -230,7 +244,7 @@ onMount(() => {
       <p class="para">
         South Korea was one of the first countries to hold elections during the pandemic. Government's uccessful handling of the crisis brought it a landslide victory with the highest turnout since 1996.
       </p>
-      <p class="para">
+      <p class="para last">
         Dominican Republic hold general elections in July 2020, one of the first countries to hold elections during the pandemic in the Americas. On the elections day, 1,036 COVID cases were registered cases, with the cumulative highest number of cases up to that moment.
       </p>
     <div class="turnout-chart" bind:this={width}>
@@ -240,6 +254,12 @@ onMount(() => {
       <TurnoutChart data={dataTurnoutDiff} width={widthChart} x={xTurnoutDiff} xTicks = {xTicksDiff}/>
     </div>
   </section>
+  <section class="textblocks">
+    <h2 class="title-turnout-strigency">Was turnout lower in elections with higher strigency measures?</h2>
+  </section>
+    <div class="turnout-chart" bind:this={width}>
+      <TurnoutStringency data={dataTurnoutStringency} width={widthChart} />
+      <div>
 </article>
 
 <style>
@@ -260,7 +280,7 @@ h1 {
   margin-bottom: 2rem;
 }
 
-#turnout-intro {
+.textblocks {
   margin: 0 auto;
   max-width: 700px;
 }
@@ -268,6 +288,14 @@ h1 {
  h2 {
   text-align: left;
  }
+
+.title-turnout-strigency {
+  margin-top: 100px;
+}
+
+.last {
+  margin-bottom: 95px;
+}
 
 .para {
   font-size: 1.2rem;

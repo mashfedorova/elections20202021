@@ -1,5 +1,5 @@
 <script>
-  import { forceSimulation, forceX, forceY, forceCollide, scaleLinear, scaleOrdinal, extent, min, schemeSet1} from 'd3';
+  import { forceSimulation, forceX, forceY, forceCollide, scaleLinear, scaleOrdinal, extent, min} from 'd3';
   import { _ } from 'lodash';
   export let data;
   export let width;
@@ -14,8 +14,6 @@
   $: xTicksTurnoutDiff = [min(data, d => +d.turnoutDiff), -15, -5, 0, 5, 15];
 
   $: height = width/4;
-
-  $: console.log(data)
 
   $: xScaleTurnout = scaleLinear()
   .domain(extent(data, d => d.turnout_reg_votes))
@@ -58,7 +56,7 @@
     <!-- <text  x={d.x} y={d.y}>{d.country}</text> -->
   {/each}
   {#if xTicks === 'turnout'}
-    <text  class="chart-title"x={margin.left-40} y={margin.top*2}>Voter turnout</text>
+    <text  class="chart-title"x={margin.left-40} y={margin.top}>Voter turnout</text>
   <g>
     {#each xTicksTurnout as tick }
     <g class="tick" transform="translate({xScaleTurnout(tick)}, {height-margin.bottom})">
@@ -67,7 +65,7 @@
   {/each}
   <text  class="country-labels" x={xScaleTurnout(99)} y={(height/2)-12}>Laos</text>
   <line  x1={xScaleTurnout(99.3)} x2={xScaleTurnout(100)} y1={(height/2-3)} y2={(height/2-10)} stroke='#525252'></line>
-  <text  class="country-labels" x={xScaleTurnout(98)} y={(height/2)+30}>Vietnam'}</text>
+  <text  class="country-labels" x={xScaleTurnout(98)} y={(height/2)+30}>Vietnam</text>
   <line  x1={xScaleTurnout(98.4)} x2={xScaleTurnout(99.3)} y1={(height/2+12)} y2={(height/2+20)} stroke='#525252'></line>
   <text  class="country-labels" x={xScaleTurnout(93)} y={(height/2)-12}>Singapore</text>
   <text  class="country-labels" x={xScaleTurnout(24)} y={(height/2)-70}>Egypt had low turnout</text>
@@ -76,7 +74,7 @@
   <text  class="country-labels" x={xScaleTurnout(24)} y={(height/2)-25}>to bring voters to the polls.</text>
   <line  x1={xScaleTurnout(29.3)} x2={xScaleTurnout(29.3)} y1={(height/2)-20} y2={(height/2-5)} stroke='#525252'></line>
   <text  class="country-labels" x={xScaleTurnout(17)} y={(height/2)+35}>Algeria held a referendum</text>
-  <text  class="country-labels" x={xScaleTurnout(17)} y={(height/2)+50}>propoosing a revised constitution.</text>
+  <text  class="country-labels" x={xScaleTurnout(17)} y={(height/2)+50}>proposing a revised constitution.</text>
   <text  class="country-labels" x={xScaleTurnout(17)} y={(height/2)+65}>Critics called for boycott of the vote</text>
   <text  class="country-labels" x={xScaleTurnout(17)} y={(height/2)+80}>seen as a lacking in substance.</text>
   <line  x1={xScaleTurnout(23.3)} x2={xScaleTurnout(23.3)} y1={(height/2+12)} y2={(height/2+20)} stroke='#525252'></line>
@@ -124,12 +122,9 @@
 </svg>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap');
 
 .country-labels {
-  font-family: 'Nanum Pen Script', cursive;
-  font-size: 1em;
-  fill: rgb(119, 119, 119);
+  font-size: 0.9rem;
 }
 
 .chart-title {
