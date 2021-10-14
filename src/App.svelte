@@ -42,6 +42,10 @@ let dataTurnoutDiff = [];
 let xTicksTurn = 'turnout';
 let xTicksDiff = 'difference';
 let dataTurnoutStringency = [];
+let stringentChartY = 'yTurnout';
+let yTick = 'turnoutScaled';
+let yTickLabel = 'turnout';
+
 
 function resize() {
    width = document.body.clientWidth
@@ -90,6 +94,13 @@ function step6() {
   opacityValue = 'opacityLines';
 }
 
+function turnoutStep2() {
+  stringentChartY = 'yTurnoutDiff';
+  dataTurnoutStringency = dataTurnoutStringency.filter(d => !!d.turnoutDiff)
+  yTick = 'turnoutDiffScaled'
+  yTickLabel = 'turnoutDiff'
+}
+
 onMount(
   async () => {
   const dataRaw = await csv('data/dataFinal9.csv', d => {
@@ -119,20 +130,29 @@ onMount(
         demIndexCat: d.demIndexCat
 
       }
-    }).value()
+    }).value();
+
   const dataTurnoutStringencyCalc = _.chain(dataRaw.filter(d => d.turnout_reg_votes && d.stringency_index))
     .map((d) => {
       return {
         stringency_index: +d.stringency_index,
         turnout_reg_votes: d.turnout_reg_votes,
+        turnoutDiff: d.turnoutDiff,
         country: d.country,
         d: d.d,
         d1: d.d1,
         d4: d.d4,
       }
-    }).value()
+    })
+    .sortBy('turnoutDiff')
+    .reverse()
+    .value();
+
   dataTurnoutStringency = dataTurnoutStringencyCalc;
 });
+
+  // $: console.log(dataTurnoutStringency,dataTurnoutDiff)
+  // $: console.log(dataTurnoutStringency)
 
 onMount(resize)
 
@@ -143,6 +163,15 @@ onMount(() => {
     endTrigger: '#step-6',
     start: 'center center',
     end: '#step-6',
+    pin: true,
+    pinSpacing: false,
+  });
+
+  ScrollTrigger.create({
+    trigger: '#turnout-stringency-chart',
+    endTrigger: '#turnout-step-3',
+    start: 'center center',
+    end: '#turnout-step-3',
     pin: true,
     pinSpacing: false,
   });
@@ -188,6 +217,12 @@ onMount(() => {
       start: "top 80%",
       onEnter: step6,
       });
+
+      ScrollTrigger.create({
+      trigger: "#turnout-step-2",
+      start: "top 80%",
+      onEnter: turnoutStep2,
+      });
 })
 </script>
 <svelte:window on:resize='{resize}'/>
@@ -224,6 +259,7 @@ onMount(() => {
   <section class="step" id="step-6">
     <p><strong>Ethiopia</strong> postponed parlamentary elections mutltiple times and for the longest period, for about ten months. In the end of August, when elections were originally scheduled 1,500 COVID-19 cases were recoded in the country,  one of the highest numbers during the pandemic up to this date. The <a href="https://www.aljazeera.com/opinions/2021/6/18/why-ethiopias-elections-should-be-postponed" target="_blank">postponement</a> of elections, done unilaterally by the countries prime minister Abiy Ahmed was met with critisism by his opponents. </p>
   </section>
+</article>
   <section class="textblocks">
     <h2>How electoral participation changed during the pandemic?</h2>
       <p class="para">
@@ -256,11 +292,16 @@ onMount(() => {
   </section>
   <section class="textblocks">
     <h2 class="title-turnout-strigency">Was turnout lower in elections with higher strigency measures?</h2>
+    <p class="para last">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ut rhoncus purus. Aliquam eget dui quis libero ullamcorper varius vitae aliquet magna. Quisque quis posuere tellus, vitae commodo lorem. Aliquam quis feugiat eros. Mauris rhoncus quam sed massa pellentesque convallis. Praesent accumsan, leo nec convallis venenatis, sem nisl vulputate augue, sit amet interdum urna ligula id neque. Proin laoreet, dui vitae luctus egestas, magna quam fermentum erat, et varius ante sem nec urna. Maecenas efficitur vestibulum est, sit amet consectetur dui semper vitae. Curabitur hendrerit purus viverra, placerat libero id, ullamcorper odio. </p>
   </section>
-    <div class="turnout-chart" bind:this={width}>
-      <TurnoutStringency data={dataTurnoutStringency} width={widthChart} />
-      <div>
-</article>
+  <div class="turnout-chart" id="turnout-stringency-chart" bind:this={width}>
+    <TurnoutStringency data={dataTurnoutStringency} width={widthChart} y={stringentChartY} {yTick} {yTickLabel}/>
+  </div>
+    <article class="scrolls">
+      <p class="step" id="turnout-step-1">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ducimus omnis ullam quidem aperiam minus eligendi, quos, asperiores inventore repellat rem accusamus optio consequatur maxime, consequuntur illum. Mollitia facere eaque praesentium.</p>
+      <p class="step" id="turnout-step-2">Dicta fugiat ratione aperiam amet tenetur maiores rerum ea dolores, iure in, numquam fuga exercitationem. Vitae soluta similique, laborum exercitationem nostrum omnis? Debitis porro totam sed nulla praesentium veniam aliquam!</p>
+      <p class="step" id="turnout-step-3">Dicta fugiat ratione aperiam amet tenetur maiores rerum ea dolores, iure in, numquam fuga exercitationem. Vitae soluta similique, laborum exercitationem nostrum omnis? Debitis porro totam sed nulla praesentium veniam aliquam!</p>
+    </article>
 
 <style>
 
@@ -322,6 +363,8 @@ h1 {
   /* height: 50vh; */
 }
 
+
+
  .step {
   border: 2px solid #000;
   box-shadow: 3px 3px 0 0 rgb(165, 165, 165);
@@ -340,6 +383,10 @@ h1 {
 #step-1 {
   margin-top: 0;
 }
+
+/* #turnout-step-1 {
+  margin-top: 0;
+} */
 
 
 .postponed {

@@ -1,33 +1,61 @@
 <script>
   import { scaleLinear, extent, min, max, schemeSet1, line } from 'd3';
-  import { regression, regressionLinear} from 'd3-regression'
+  import { regressionLinear} from 'd3-regression'
+  import { fade } from 'svelte/transition';
   import  {_} from 'lodash';
   export let data;
   export let width;
+  export let y = 'yTurnout';
+  export let yTick = 'turnoutScaled';
+  export let yTickLabel = 'turnout';
 
   const margin= { top:25, right:200, bottom:60, left:200 };
   const backgroundColor = "#f0e8e5";
 
   $: height = width/2;
 
-  $: extentStringency = extent(data, d => d.stringency_index)
-  $: extentTurnout = extent(data, d => d.turnout_reg_votes)
-
-  $: stringencyRange = _.range(10, 100, 10)
-  $: turnoutRange = _.range(20, 110, 10)
+  $: extentStringency = extent(data, d => d.stringency_index);
+  $: extentTurnout = extent(data, d => d.turnout_reg_votes);
+  $: extentTurnoutDiff = extent(data, d => +d.turnoutDiff);
 
   $: xScaleStringency= scaleLinear()
     .domain(extentStringency)
-    .range([margin.left, width - margin.right])
+    .range([margin.left, width - margin.right]);
 
   $: yScaleTurnout = scaleLinear()
     .domain(extentTurnout)
-    .range([height-margin.bottom, margin.top])
+    .range([height-margin.bottom, margin.top]);
+
+  $: yScaleTurnoutDiff = scaleLinear()
+  .domain(extentTurnoutDiff)
+  .range([height-margin.bottom, margin.top]);
+
+  $: stringencyRange = _.range(10, 100, 10);
+  // $: turnoutRange = y === 'yTurnout' ? _.range(20, 110, 10) : _.range(-25, 20, 5);
+
+  $: yTurnout = _.range(20, 110, 10);
+  $: yTurnoutDiff =  _.range(-25, 20, 5)
+
+  $: yTicksData = yTurnout.map((x,i) => {
+    return {turnout:x, turnoutDiff:yTurnoutDiff[i]}
+  })
+
+  $: yTicks = yTicksData.map((d) => {
+    return {
+      ...d,
+      turnoutScaled: yScaleTurnout(d.turnout),
+      turnoutDiffScaled: yScaleTurnoutDiff(d.turnoutDiff),
+
+    }
+  })
+
+  $: console.log(yTicks)
 
   $: dataCalc = data.map(d => {
   return {
     x: xScaleStringency(d.stringency_index),
     yTurnout: yScaleTurnout(d.turnout_reg_votes),
+    yTurnoutDiff: yScaleTurnoutDiff(+d.turnoutDiff),
     d: d.d,
     d1: d.d1,
     d4: d.d4,
@@ -51,7 +79,12 @@
 </script>
 <svg width={width} height={height}>
   {#each dataCalc as d }
-    <g transform="translate({d.x}, {d.yTurnout}) scale(0.7)">
+    <g
+    class="animate"
+    transform="translate({d.x}, {d[y]})"
+    style="--x: {d.x}px; --y: {d[y]}px;"
+    >
+    <g transform="scale(0.7)">
       <path
       d={d.d}
       stroke='#000'
@@ -68,10 +101,11 @@
       fill= {backgroundColor}
       stroke-width='2'></path>
     </g>
+    </g>
   {/each}
 
   {#each stringencyRange as tick }
-    <g class="tick" transform="translate({xScaleStringency(tick)}, {height-10})">
+    <g class="tick-x" transform="translate({xScaleStringency(tick)}, {height-10})">
       <text x="0" y="0" fill='#000' opacity='0.7' fade:in>{tick}</text>
     </g>
     {/each}
@@ -87,10 +121,12 @@
       >
     </line>
 
-  {#each turnoutRange as tick }
-    <g class="tick" transform="translate({margin.left*0.6}, {yScaleTurnout(tick)+11})">
-      <text x="0" y="0" fill='#000' opacity='0.7' fade:in>{tick}</text>
-    </g>
+  {#each yTicks as tick }
+    <!-- <g class="tick-y" transform="translate({margin.left*0.6}, {tick[yTick]+11})" > -->
+      <text class="tick-y" x="{margin.left*0.6}" y="{tick[yTick]+11}" fill='#000' opacity='0.7' transition:fade="{{duration: 2000}}">
+        {tick[yTickLabel]}
+      </text>
+    <!-- </g>  in:fade="{{delay: 100}}"-->
   {/each}
   <!-- svelte-ignore component-name-lowercase -->
   <line
@@ -115,5 +151,9 @@
 </svg>
 
 <style>
+.animate {
+  transition: transform 0.6s ease-out;
+  transform: translate(var(--x), var(--y));
+}
 
 </style>
