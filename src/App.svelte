@@ -11,6 +11,7 @@ import { onMount } from 'svelte';
 import IntroChart from '../components/IntroChart.svelte';
 import TurnoutChart from '../components/TurnoutChart.svelte';
 import TurnoutStringency from '../components/TurnoutStringency.svelte';
+import Incumbents from '../components/Incumbents.svelte';
 import  {_} from 'lodash';
 gsap.registerPlugin(ScrollTrigger);
 
@@ -42,9 +43,14 @@ let dataTurnoutDiff = [];
 let xTicksTurn = 'turnout';
 let xTicksDiff = 'difference';
 let dataTurnoutStringency = [];
-let stringentChartY = 'yTurnout';
+let stringentChartY = 'turnout_reg_votes';
 let yTick = 'turnoutScaled';
-let yTickLabel = 'turnout';
+let yTickLabel = 'turnout_reg_votes';
+let regY = 'turnout_reg_votes';
+let yHorisontal = 60;
+let turnoutLabel = 'turnout';
+let rectTurnoutStringency = '';
+let regionsHighlight = '';
 
 
 function resize() {
@@ -95,10 +101,17 @@ function step6() {
 }
 
 function turnoutStep2() {
-  stringentChartY = 'yTurnoutDiff';
+  stringentChartY = 'turnoutDiff';
   dataTurnoutStringency = dataTurnoutStringency.filter(d => !!d.turnoutDiff)
-  yTick = 'turnoutDiffScaled'
   yTickLabel = 'turnoutDiff'
+  yHorisontal = 0
+  turnoutLabel = 'turnout difference'
+  rectTurnoutStringency = 'yes';
+}
+
+function turnoutStep3() {
+  regionsHighlight = 'yes';
+  rectTurnoutStringency = '';
 }
 
 onMount(
@@ -142,6 +155,8 @@ onMount(
         d: d.d,
         d1: d.d1,
         d4: d.d4,
+        demIndexCat: d.demIndexCat,
+        continent: d.continent,
       }
     })
     .sortBy('turnoutDiff')
@@ -152,7 +167,7 @@ onMount(
 });
 
   // $: console.log(dataTurnoutStringency,dataTurnoutDiff)
-  // $: console.log(dataTurnoutStringency)
+  // $: console.log(dataTurnoutDiff)
 
 onMount(resize)
 
@@ -218,10 +233,16 @@ onMount(() => {
       onEnter: step6,
       });
 
-      ScrollTrigger.create({
+  ScrollTrigger.create({
       trigger: "#turnout-step-2",
       start: "top 80%",
       onEnter: turnoutStep2,
+      });
+
+  ScrollTrigger.create({
+      trigger: "#turnout-step-3",
+      start: "top 80%",
+      onEnter: turnoutStep3,
       });
 })
 </script>
@@ -278,10 +299,10 @@ onMount(() => {
         Several elections attracted much more voters than previous elections despite the pandemic. Burundi hold elections to replace President Pierre Nkurunziza, who had ruled the country for 15 years. A <a href="https://www.nytimes.com/2020/05/20/world/africa/burundi-election.html" target="_blank">competitive</a> race to elect a new president was characterized by widespread violence.
       </p>
       <p class="para">
-        South Korea was one of the first countries to hold elections during the pandemic. Government's uccessful handling of the crisis brought it a landslide victory with the highest turnout since 1996.
+        South Korea was one of the first countries to hold elections during the pandemic. Government's successful handling of the crisis brought it a landslide victory with the highest turnout since 1996.
       </p>
       <p class="para last">
-        Dominican Republic hold general elections in July 2020, one of the first countries to hold elections during the pandemic in the Americas. On the elections day, 1,036 COVID cases were registered cases, with the cumulative highest number of cases up to that moment.
+        The Dominican Republic held general elections in July 2020, one of the first countries to hold elections during the pandemic in the Americas. On the elections day, 1,036 COVID cases were registered cases, with the cumulative highest number of cases up to that moment.
       </p>
     <div class="turnout-chart" bind:this={width}>
       <TurnoutChart data={dataTurnout} width={widthChart} x={xTurnout} xTicks = {xTicksTurn}/>
@@ -291,17 +312,26 @@ onMount(() => {
     </div>
   </section>
   <section class="textblocks">
-    <h2 class="title-turnout-strigency">Was turnout lower in elections with higher strigency measures?</h2>
-    <p class="para last">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ut rhoncus purus. Aliquam eget dui quis libero ullamcorper varius vitae aliquet magna. Quisque quis posuere tellus, vitae commodo lorem. Aliquam quis feugiat eros. Mauris rhoncus quam sed massa pellentesque convallis. Praesent accumsan, leo nec convallis venenatis, sem nisl vulputate augue, sit amet interdum urna ligula id neque. Proin laoreet, dui vitae luctus egestas, magna quam fermentum erat, et varius ante sem nec urna. Maecenas efficitur vestibulum est, sit amet consectetur dui semper vitae. Curabitur hendrerit purus viverra, placerat libero id, ullamcorper odio. </p>
+    <h2 class="title-turnout-strigency">Was turnout lower in elections with stricter lockdowns?</h2>
+    <p class="para">Since the start of the pandemic, governments implemented various measures aiming at curbing the virus. <a href="https://www.bsg.ox.ac.uk/research/research-projects/covid-19-government-response-tracker" target="_blank">Covid-19 government response stringency index</a> developed at Oxford university provides a comparable measure of severety of lockdowns across countries. </p>
+    <p class="para last">Perhaps, in those countries where lockdowns were the most severe, turnout was lower?</p>
   </section>
   <div class="turnout-chart" id="turnout-stringency-chart" bind:this={width}>
-    <TurnoutStringency data={dataTurnoutStringency} width={widthChart} y={stringentChartY} {yTick} {yTickLabel}/>
+    <TurnoutStringency data={dataTurnoutStringency} width={widthChart} y={stringentChartY} {yTick} {yTickLabel} {regY} {yHorisontal} {turnoutLabel} {rectTurnoutStringency} {regionsHighlight}/>
   </div>
     <article class="scrolls">
-      <p class="step" id="turnout-step-1">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ducimus omnis ullam quidem aperiam minus eligendi, quos, asperiores inventore repellat rem accusamus optio consequatur maxime, consequuntur illum. Mollitia facere eaque praesentium.</p>
-      <p class="step" id="turnout-step-2">Dicta fugiat ratione aperiam amet tenetur maiores rerum ea dolores, iure in, numquam fuga exercitationem. Vitae soluta similique, laborum exercitationem nostrum omnis? Debitis porro totam sed nulla praesentium veniam aliquam!</p>
-      <p class="step" id="turnout-step-3">Dicta fugiat ratione aperiam amet tenetur maiores rerum ea dolores, iure in, numquam fuga exercitationem. Vitae soluta similique, laborum exercitationem nostrum omnis? Debitis porro totam sed nulla praesentium veniam aliquam!</p>
+      <p class="step" id="turnout-step-1">Data shows, that while there was a negative relationsip between turnout and stringency measures, the relatinship is quite weak.</p>
+      <p class="step" id="turnout-step-2">When we compare turnout during the pandemic with previous elections in the country, the relationshio becomes more evident. In those countries where more stringent measures were implemented, turnout was lower than in the previous election. Approximately half of all elections between March 2020 and June 2021 had lower or the same turnout as in the previous election and had higher stringency index.
+      </p>
+      <section class="step" id="turnout-step-3">
+        <p>Elections during pandemic in Africa tended to have higher turnout than in the previous election and lower stringency index than elections in other countries. Eight out of 11 elections with higher turnout and low stringency measures were in Africa. </p>
+      </section>
     </article>
+  <section class="textblocks">
+    <h2 class="title-turnout-strigency">Did incumbents win  more frequently?</h2>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas ducimus culpa libero voluptas quasi ipsam eum iste eos placeat quae! Explicabo dolorem, iure animi laborum a asperiores esse quod at.</p>
+  </section>
+    <Incumbents/>
 
 <style>
 
@@ -362,8 +392,6 @@ h1 {
   align-items: center;
   /* height: 50vh; */
 }
-
-
 
  .step {
   border: 2px solid #000;

@@ -113,12 +113,6 @@
   {/if}
   <text  class="source" x={margin.left} y={height - (margin.bottom/2)}>Source: International IDEA Voter Turnout <a href="https://www.idea.int/data-tools/data/voter-turnout" target="_blank">Database</a></text>
 
-
-<!--
-  <filter id="highlight">
-    <feGaussianBlur stdDeviation="7 7"/>
-  </filter> -->
-
 </svg>
 
 <style>
