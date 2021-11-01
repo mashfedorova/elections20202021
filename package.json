@@ -23,6 +23,7 @@
     "d3-regression": "^1.3.9",
     "gsap": "file:gsap-bonus.tgz",
     "lodash": "^4.17.21",
+    "rough-notation": "^0.5.1",
     "sirv-cli": "^1.0.0"
   }
 }

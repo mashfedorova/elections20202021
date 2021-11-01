@@ -52,7 +52,7 @@
 
 <svg width={width} height={height}>
   {#each dataCalc as d}
-    <rect width='7' height='8' x={d.x} y={d.y} fill={d.color} stroke='#191919' stroke-width={d.mandatoryVoting ? '2' : '1'}></rect>
+    <rect width='7' height='8' x={d.x} y={d.y}  fill={d.color} stroke='#191919' stroke-width={d.mandatoryVoting ? '2' : '1'}></rect>
     <!-- <text  x={d.x} y={d.y}>{d.country}</text> -->
   {/each}
   {#if xTicks === 'turnout'}

@@ -13,6 +13,7 @@ import TurnoutChart from '../components/TurnoutChart.svelte';
 import TurnoutStringency from '../components/TurnoutStringency.svelte';
 import Incumbents from '../components/Incumbents.svelte';
 import  {_} from 'lodash';
+import { annotate } from 'rough-notation';
 gsap.registerPlugin(ScrollTrigger);
 
 let width = document.body.clientWidth;
@@ -51,6 +52,7 @@ let yHorisontal = 60;
 let turnoutLabel = 'turnout';
 let rectTurnoutStringency = '';
 let regionsHighlight = '';
+let dataIncumbents = [];
 
 
 function resize() {
@@ -164,6 +166,21 @@ onMount(
     .value();
 
   dataTurnoutStringency = dataTurnoutStringencyCalc;
+
+    dataIncumbents = _.chain(data.filter(d => d.type !== "referendum" && d.heldAtAll === "yes"))
+    .sortBy('incumbentWon')
+    .map((d) => {
+      return {
+        incumbentWon: d.incumbentWon,
+        demIndexCat: d.demIndexCat,
+        d: d.d,
+        d1: d.d1,
+        d4: d.d4,
+      }
+    })
+    .reverse()
+    .value();
+
 });
 
   // $: console.log(dataTurnoutStringency,dataTurnoutDiff)
@@ -172,6 +189,16 @@ onMount(
 onMount(resize)
 
 onMount(() => {
+
+  // annotations
+const postponed = document.querySelector('#postponed');
+const annotation = annotate(postponed, {
+  type: 'underline' ,
+  color: 'rgb(112, 153, 250, 0.7)',
+  animate: false,
+  padding: 1
+});
+annotation.show();
 
   ScrollTrigger.create({
     trigger: '#intro-chart',
@@ -245,6 +272,9 @@ onMount(() => {
       onEnter: turnoutStep3,
       });
 })
+
+
+
 </script>
 <svelte:window on:resize='{resize}'/>
 <section class="intro">
@@ -259,7 +289,7 @@ onMount(() => {
 </div>
 <article class="scrolls">
   <section class="step" id="step-1">
-    <p>Between March 2020 and June 2021, 89 elections were held in 76 countries, with 12 countries having held multiple elections during this period. Sixteen countries at some point had <span class="postponed">postponed</span> the election.</p>
+    <p>Between March 2020 and June 2021, 89 elections were held in 76 countries, with 12 countries having held multiple elections during this period. Sixteen countries at some point had <span id="postponed">postponed</span> the election.</p>
     <p>One ballot<svg width="28" transform="scale(0.6)" class="ballot-inline"><path d="M23.3,31C16.2,31,9,30.8,1.8,30.2C1.2,20.7,1.3,11.2,2,1.7c7.1-0.1,14.2,0.3,21.2,1C24.1,12.1,24.1,21.6,23.3,31z M12.7,12.3c2.8-0.4,5.6-0.6,8.5-0.5 M13.5,21.3l7.2,0.2 M5.9,10.7l1.9,3.4l3.6-7.6" stroke="#000" fill="#f0e8e5" stroke-width="2.7"></path><circle cx="8" cy="23" r="3" stroke="#000" fill="#f0e8e5" stroke-width="2"></circle></svg>represents one national election (either presedential or parliamentary), held on a given day and two ballots<svg width="29" transform="scale(0.6)" class="ballot-inline ballot-two"><path d="M23.3,28.1c-5.5,0.7-11.1,0.1-16.3-1.6c1-8.7,2.3-17,4-25c5.7-0.3,11.4,0.2,17,2.5C27.4,11.9,26.3,19.7,23.3,28.1z" stroke="#000" fill="#f0e8e5" stroke-width="2.5"></path><path d="M22.2,30.6c-6.3,1-12.7,1.8-19.1,2.3C1.6,24,1,15.1,1.4,6.2C7.3,5.6,13.1,5.1,19,4.9C19.8,13.4,20.5,21.9,22.2,30.6z M4.4,11.7c0.6,0.6,1.2,1.2,1.8,1.8c0.4-1.5,1.1-2.8,2-4 M11.6,11.4c1.1-0.4,2.3-0.6,3.6-0.6 M13.3,22.6c1.2-0.4,2.4-0.5,3.6-0.4" stroke="#000" fill="#f0e8e5" stroke-width="2.5"></path><circle cx="8" cy="23" r="3" stroke="#000" fill="#f0e8e5" stroke-width="2.5"></circle></svg>represent countries where citizens elected president and parliament on the same day. </p>
   </section>
   <section class="step" id="step-2">
@@ -304,10 +334,10 @@ onMount(() => {
       <p class="para last">
         The Dominican Republic held general elections in July 2020, one of the first countries to hold elections during the pandemic in the Americas. On the elections day, 1,036 COVID cases were registered cases, with the cumulative highest number of cases up to that moment.
       </p>
-    <div class="turnout-chart" bind:this={width}>
+    <div class="chart" bind:this={width}>
       <TurnoutChart data={dataTurnout} width={widthChart} x={xTurnout} xTicks = {xTicksTurn}/>
     </div>
-    <div class="turnout-chart" bind:this={width} >
+    <div class="chart" bind:this={width} >
       <TurnoutChart data={dataTurnoutDiff} width={widthChart} x={xTurnoutDiff} xTicks = {xTicksDiff}/>
     </div>
   </section>
@@ -316,7 +346,7 @@ onMount(() => {
     <p class="para">Since the start of the pandemic, governments implemented various measures aiming at curbing the virus. <a href="https://www.bsg.ox.ac.uk/research/research-projects/covid-19-government-response-tracker" target="_blank">Covid-19 government response stringency index</a> developed at Oxford university provides a comparable measure of severety of lockdowns across countries. </p>
     <p class="para last">Perhaps, in those countries where lockdowns were the most severe, turnout was lower?</p>
   </section>
-  <div class="turnout-chart" id="turnout-stringency-chart" bind:this={width}>
+  <div class="chart" id="turnout-stringency-chart" bind:this={width}>
     <TurnoutStringency data={dataTurnoutStringency} width={widthChart} y={stringentChartY} {yTick} {yTickLabel} {regY} {yHorisontal} {turnoutLabel} {rectTurnoutStringency} {regionsHighlight}/>
   </div>
     <article class="scrolls">
@@ -331,8 +361,9 @@ onMount(() => {
     <h2 class="title-turnout-strigency">Did incumbents win  more frequently?</h2>
     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas ducimus culpa libero voluptas quasi ipsam eum iste eos placeat quae! Explicabo dolorem, iure animi laborum a asperiores esse quod at.</p>
   </section>
-    <Incumbents/>
-
+    <div class="chart" bind:this={width}>
+      <Incumbents data={dataIncumbents} width={widthChart}/>
+    </div>
 <style>
 
 .intro {
@@ -383,7 +414,7 @@ h1 {
   height: 100vh;
 }
 
-.turnout-chart{
+.chart {
   margin: 0 auto;
   /* max-width: 1200px; */
   display: flex;
@@ -417,13 +448,13 @@ h1 {
 } */
 
 
-.postponed {
-  background: rgb(112, 153, 250, 0.4);
+#postponed {
+  /* background: rgb(112, 153, 250, 0.4);
   background-repeat: no-repeat;
   background-size: 100% 90%;
   background-position: 0 100%;
   padding-left: 2px;
-  padding-right: 2px;
+  padding-right: 2px; */
 }
 
 .ballot-inline {
