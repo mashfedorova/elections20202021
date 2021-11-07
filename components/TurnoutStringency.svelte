@@ -148,6 +148,14 @@
       stroke='#000'
       fill= {backgroundColor}
       stroke-width='2'></path>
+      <circle
+      cx={d.d4 ? 9 : 8}
+      cy=23
+      r= {d.d4 ? 2 : 3}
+      stroke='#000'
+      fill= {backgroundColor}
+      stroke-width='2'
+      ></circle>
     </g>
     </g>
   {/each}
