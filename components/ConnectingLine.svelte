@@ -1,11 +1,12 @@
 <script>
-  import { line, scaleLinear, scaleTime, extent, max, curveBumpY } from 'd3';
+  import { line, scaleLinear, scaleTime, extent, max, curveBumpY, timeTuesdays } from 'd3';
   import { fade } from 'svelte/transition';
 
   export let data;
   export let width;
   export let height;
   export let constData;
+
 
   const margin = { top:20, right:100, bottom:30, left: 100 };
 
@@ -28,8 +29,8 @@
   d={stripes(data)}
   stroke='#8f8885'
   fill= 'none'
-  stroke-width='2'
-  opacity='0.4'
+  stroke-width='5'
+  opacity='0.1'
   ></path>
 
 <style>

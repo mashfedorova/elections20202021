@@ -12,8 +12,6 @@
   $: autocracies = data.filter(d => d.demIndexCat === 'authoritarian regime');
   $: hybrids = data.filter(d => d.demIndexCat === 'hybrid regime');
 
-
-
   // const margin= { top:25, right:200, bottom:60, left:200 };
 
   // $: dataCalc = _.chain(data)
@@ -24,7 +22,6 @@
   .domain(map(data, d => d.incumbentWon))
   .range(["#709afa", "#dbbd84", "#949494"]);
 
-  $: console.log(data)
 
 </script>
 

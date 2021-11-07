@@ -12,6 +12,7 @@ import IntroChart from '../components/IntroChart.svelte';
 import TurnoutChart from '../components/TurnoutChart.svelte';
 import TurnoutStringency from '../components/TurnoutStringency.svelte';
 import Incumbents from '../components/Incumbents.svelte';
+// import ConnectingLine from '../components/ConnectingLine.svelte';
 import  {_} from 'lodash';
 import { annotate } from 'rough-notation';
 gsap.registerPlugin(ScrollTrigger);
@@ -68,9 +69,19 @@ function step2() {
   highlighApr = 'yes';
 }
 
+function step2Back() {
+  highlighApr = 'no';
+}
+
 function step3() {
   opacityValue = 'opFadeout';
   cancelledBallots = data.filter(d => d.heldAtAll === 'no');
+}
+
+function step3Back() {
+  opacityValue = 'opacity';
+  highlighApr = 'yes';
+  cancelledBallots = [];
 }
 
 function step4() {
@@ -82,6 +93,14 @@ function step4() {
   dataRectsPostponed = data.filter(d => d.werePostponed === 'yes' && d.heldAtAll === 'yes');
   monthsRaw = [];
   regimes = ["democracy","unclassified","authoritarian regime","hybrid regime"];
+}
+
+function step4Back() {
+  opacityValue = 'opFadeout';
+  whichY = 'y';
+  whichX = 'x';
+  regimes = [];
+  monthsRaw = monthsList;
 }
 
 function step5() {
@@ -97,9 +116,30 @@ function step5() {
   legend = 'yes';
 }
 
+function step5Back() {
+  whichY =  'yDem';
+  whichX = 'xDem';
+  updatedData = data.filter(d => d.heldAtAll === 'yes');
+  data = _.sortBy(data, ['demIndexCat', 'heldDiff']);
+  dataRectsPostponed = data.filter(d => d.werePostponed === 'yes' && d.heldAtAll === 'yes');
+  monthsRaw = [];
+  regimes = ["democracy","unclassified","authoritarian regime","hybrid regime"];
+  colorBallot = 'no';
+  legend = 'no';
+  dataPostponedBallots = [];
+  cancelledBallots = data.filter(d => d.heldAtAll === 'no');
+  marginLeft = 100;
+}
+
+
 function step6() {
   highlightLines = 'yes';
   opacityValue = 'opacityLines';
+}
+
+function step6Back() {
+  highlightLines = 'no';
+  opacityValue = 'opacity';
 }
 
 function turnoutStep2() {
@@ -183,9 +223,6 @@ onMount(
 
 });
 
-  // $: console.log(dataTurnoutStringency,dataTurnoutDiff)
-  // $: console.log(dataTurnoutDiff)
-
 onMount(resize)
 
 onMount(() => {
@@ -215,7 +252,7 @@ annotation.show();
     start: 'center center',
     end: '#turnout-step-3',
     pin: true,
-    pinSpacing: false,
+    pinSpacing: false
   });
 
   ScrollTrigger.create({
@@ -233,31 +270,36 @@ annotation.show();
   ScrollTrigger.create({
       trigger: "#step-2",
       start: "top 80%",
-      onEnter: step2
+      onEnter: step2,
+      onLeaveBack: step2Back
       });
 
   ScrollTrigger.create({
       trigger: "#step-3",
       start: "top 80%",
-      onEnter: step3
+      onEnter: step3,
+      onLeaveBack: step3Back
       });
 
   ScrollTrigger.create({
       trigger: "#step-4",
       start: "top 80%",
-      onEnter: step4
+      onEnter: step4,
+      onLeaveBack: step4Back
       });
 
   ScrollTrigger.create({
       trigger: "#step-5",
       start: "top 80%",
-      onEnter: step5
+      onEnter: step5,
+      onLeaveBack: step5Back
       });
 
   ScrollTrigger.create({
       trigger: "#step-6",
       start: "top 80%",
       onEnter: step6,
+      onLeaveBack: step6Back
       });
 
   ScrollTrigger.create({
@@ -273,8 +315,6 @@ annotation.show();
       });
 })
 
-
-
 </script>
 <svelte:window on:resize='{resize}'/>
 <section class="intro">
@@ -286,6 +326,8 @@ annotation.show();
   <IntroChart data={updatedData} width={widthChart} {cancelledBallots} {whichY} {whichX} {dataRectsPostponed} {monthsRaw} {regimes}
   constData={data} {dataPostponedBallots} {marginLeft} {colorBallot} {highlighApr} {legend} {opacityValue} {highlightLines}/>
   <!-- <CancelledBallots {cancelledBallots} width={widthChart}/> -->
+  <!-- <ConnectingLine {data} {constData} width={widthChart}/> -->
+
 </div>
 <article class="scrolls">
   <section class="step" id="step-1">

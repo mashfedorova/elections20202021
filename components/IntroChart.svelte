@@ -1,35 +1,41 @@
 <script>
-import { scaleTime, scaleLinear, extent, max, timeFormat, timeParse, scaleBand, scaleOrdinal, map} from 'd3';
-import { detach_dev } from 'svelte/internal';
-import { fade } from 'svelte/transition';
+  import { scaleTime, scaleLinear, extent, max, timeFormat, timeParse, scaleBand, scaleOrdinal, map, line, curveBumpY, select} from 'd3';
+  import { onMount } from 'svelte/internal';
+  import { fade } from 'svelte/transition';
+  import  { _ } from 'lodash';
+  import rough from 'roughjs/bundled/rough.cjs';
+  // import { Line } from 'rough-svelte';
 
-export let data;
-export let width = 0;
-export let cancelledBallots;
-export let monthsRaw;
-const marginDem = { top:25, right:250, bottom:40, left:250 };
-const modifier = 10;
-export let whichY = 'y';
-export let whichX = 'x';
-export let dataRectsPostponed;
-export let regimes;
-export let constData;
-export let dataPostponedBallots;
-export let marginLeft;
-export let colorBallot;
-export let highlighApr;
-export let legend;
-export let opacityValue;
-export let highlightLines;
+  export let data;
+  export let width = 0;
+  export let cancelledBallots;
+  export let monthsRaw;
+  const marginDem = { top:25, right:250, bottom:40, left:250 };
+  const modifier = 10;
+  export let whichY = 'y';
+  export let whichX = 'x';
+  export let dataRectsPostponed;
+  export let regimes;
+  export let constData;
+  export let dataPostponedBallots;
+  export let marginLeft;
+  export let colorBallot;
+  export let highlighApr;
+  export let legend;
+  export let opacityValue;
+  export let highlightLines;
 
-const backgroundColor = "#f0e8e5";
 
-$: margin = { top:20, right:100, bottom:30, left:marginLeft };
+  const backgroundColor = "#f0e8e5";
+  // import testing from "./../public/data/test.js";
+  // import dataLines from "./../public/data/dataLines.js";
 
-$: alldates = extent(constData, d => d.heldMonthYearDate)
+  $: margin = { top:20, right:100, bottom:30, left:marginLeft };
 
-$: months = monthsRaw.map(date => timeParse("%B %Y")(date))
-$: height = width/2;
+  $: alldates = extent(constData, d => d.heldMonthYearDate)
+
+  $: months = monthsRaw.map(date => timeParse("%B %Y")(date))
+  $: height = width/2;
 
 $: xScaleTicks = scaleTime()
   .domain(extent(months, d => d))
@@ -145,12 +151,57 @@ return {
   reg: d.demIndexCat,
   country: d.country,
   opacityLines: highlightLines === 'no' ? '1' : d.country === 'Ethiopia' ? '1' : '0.3'
-
 };
 });
 
+// const sel = select(this);
+// const svg = sel.append('svg').attr('class', 'control');
+// const rs = rough.svg(svg.node());
+// // const svg = select('#svg');
+// // const rc = rough.svg(svg.node())
+// // svg.appendChild(rc.circle(80, 120, 50));
+
+// console.log(sel)
+
+//   const svg = document.getElementById('svg');
+//   const rs = rough.svg(svg.node());
+
+// console.log(rs)
+
+// onMount(() => {
+//   const svg = document.getElementById('svg');
+//   const rc = rough.svg(svg);
+//   // svg.appendChild(rc.circle(80, 120, 50));
+
+//   // for (const x of dataPostponedDates) { console.log(x); }
+//   dataLines.forEach(d => {
+//       svg.appendChild(rc.line(d.xPost1, d.yPost, d.xHeld, d.yHeld, {strokeWidth: 5, stroke: 'lightblue'}));
+//       // console.log(d.xPost1, d.yPost, d.xPost1, d.yHeld)
+//       // svg.appendChild(rc.line(356.1636728366919 ,20 ,356.1636728366919,20));
+//       // svg.appendChild(rc.line(356 ,20 ,356,20));
+//   // svg.appendChild(rc.circle(80, 120, 50));
+//     })
+// console.log(dataLines)
+
+    //   <line
+    // in:fade="{{duration:100, delay: 500}}"
+    // x1={d.xPost1+23}
+    // x2={d.xHeld}
+    // y1={d.yPost+15}
+    // y2={d.yHeld+15}
+    // stroke={ScaleColorReg(d.reg)}
+    // stroke-width='5'
+    // stroke-opacity={highlightLines === 'no' ? d.opacityDiff : highlightLines === 'yes' && d.country === 'Ethiopia' ? d.opacityDiff : d.opacityLines }
+    // opacity={d[opacityValue]}
+    // ></line>
+  // })
+
+  // console.log(svg)
 </script>
-<svg width={width} height={height}>
+
+
+<svg width={width} height={height} id="svg">
+
   {#each dataHeldCalc as d}
   <g class="animate"
   transform="translate({d[whichX]}, {d[whichY]})"
@@ -186,6 +237,7 @@ return {
     {/each}
 
 {#each dataPostponedDates as d}
+        <!-- svelte-ignore component-name-lowercase -->
         <line
         in:fade="{{duration:100, delay: 500}}"
         x1={d.xPost1+23}
