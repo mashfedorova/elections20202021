@@ -54,6 +54,7 @@ let turnoutLabel = 'turnout';
 let rectTurnoutStringency = '';
 let regionsHighlight = '';
 let dataIncumbents = [];
+let dataTurnoutStringencyUpdated = [];
 
 
 function resize() {
@@ -151,9 +152,24 @@ function turnoutStep2() {
   rectTurnoutStringency = 'yes';
 }
 
+function turnoutStep2Back() {
+  stringentChartY = 'turnout_reg_votes';
+  dataTurnoutStringency = dataTurnoutStringencyUpdated;
+  yTickLabel = 'turnout_reg_votes';
+  yHorisontal = 60;
+  turnoutLabel = 'turnout';
+  rectTurnoutStringency = '';
+
+}
+
 function turnoutStep3() {
   regionsHighlight = 'yes';
   rectTurnoutStringency = '';
+}
+
+function turnoutStep3Back() {
+  regionsHighlight = '';
+  rectTurnoutStringency = 'yes';
 }
 
 onMount(
@@ -206,6 +222,7 @@ onMount(
     .value();
 
   dataTurnoutStringency = dataTurnoutStringencyCalc;
+  dataTurnoutStringencyUpdated = dataTurnoutStringencyCalc;
 
     dataIncumbents = _.chain(data.filter(d => d.type !== "referendum" && d.heldAtAll === "yes"))
     .sortBy('incumbentWon')
@@ -306,12 +323,14 @@ annotation.show();
       trigger: "#turnout-step-2",
       start: "top 80%",
       onEnter: turnoutStep2,
+      onLeaveBack: turnoutStep2Back
       });
 
   ScrollTrigger.create({
       trigger: "#turnout-step-3",
       start: "top 80%",
       onEnter: turnoutStep3,
+      onLeaveBack: turnoutStep3Back
       });
 })
 

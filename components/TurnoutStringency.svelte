@@ -1,7 +1,7 @@
 <script>
   import { scaleLinear, extent, scaleOrdinal, line } from 'd3';
   import { regressionLinear} from 'd3-regression'
-  import { fade, fly } from 'svelte/transition';
+  import { fade } from 'svelte/transition';
   import { interpolatePath } from "d3-interpolate-path";
   import { tweened } from "svelte/motion";
   import  {_} from 'lodash';
@@ -153,9 +153,9 @@
   {/each}
 
   {#if regionsHighlight}
-  {#each dataCalc as d}
+  {#each dataCalc.filter(d => d.continent === 'Africa') as d}
     <g transform="translate({d.x}, {d.yScaled}) scale(0.7)">
-      <rect in:fade
+      <rect transition:fade
       x="3"
       y="5"
       width="18"
