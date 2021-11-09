@@ -26,16 +26,17 @@
   export let highlightLines;
 
 
-  const backgroundColor = "#f0e8e5";
-  // import testing from "./../public/data/test.js";
-  // import dataLines from "./../public/data/dataLines.js";
 
-  $: margin = { top:20, right:100, bottom:30, left:marginLeft };
+const backgroundColor = "#f0e8e5";
+// import testing from "./../public/data/test.js";
+// import dataLines from "./../public/data/dataLines.js";
 
-  $: alldates = extent(constData, d => d.heldMonthYearDate)
+$: margin = { top:20, right:100, bottom:30, left:marginLeft };
 
-  $: months = monthsRaw.map(date => timeParse("%B %Y")(date))
-  $: height = width/2;
+$: alldates = extent(constData, d => d.heldMonthYearDate)
+
+$: months = monthsRaw.map(date => timeParse("%B %Y")(date))
+$: height = width/2;
 
 $: xScaleTicks = scaleTime()
   .domain(extent(months, d => d))

@@ -280,7 +280,6 @@ annotation.show();
   ScrollTrigger.create({
       trigger: "#intro-chart",
       start: "center 80%",
-      markers: true,
       onEnter: updateData
 });
 
@@ -342,7 +341,7 @@ annotation.show();
   <p class="intro-para">Between March 2020, when WHO has <a href='https://www.euro.who.int/en/health-topics/health-emergencies/coronavirus-covid-19/news/news/2020/3/who-announces-covid-19-outbreak-a-pandemic' target="_blank">declared</a> coronavirus (COVID-19) outbreak a global pandemic and June 2021. Between March 2020 and June 2021, elections were held in 75 countries. In total, 88 elections were held, with 12 countries having held multiple elections during this period. Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae ea tenetur exercitationem, voluptatem quo temporibus aliquid optio suscipit, veniam pariatur quaerat natus at. Ab vitae iusto dolor voluptas officiis eaque libero reiciendis quas voluptates perferendis ratione, odio corrupti omnis tempora quo a? Amet ducimus laborum ipsum quidem consequatur, vitae ex nihil dolore accusamus tempora, iusto hic culpa vero, doloremque eos.</p>
 </section>
 <div id="intro-chart" bind:this={width} >
-  <IntroChart data={updatedData} width={widthChart} {cancelledBallots} {whichY} {whichX} {dataRectsPostponed} {monthsRaw} {regimes}
+   <IntroChart data={updatedData} width={widthChart} {cancelledBallots} {whichY} {whichX} {dataRectsPostponed} {monthsRaw} {regimes}
   constData={data} {dataPostponedBallots} {marginLeft} {colorBallot} {highlighApr} {legend} {opacityValue} {highlightLines}/>
   <!-- <CancelledBallots {cancelledBallots} width={widthChart}/> -->
   <!-- <ConnectingLine {data} {constData} width={widthChart}/> -->
@@ -395,11 +394,12 @@ annotation.show();
       <p class="para last">
         The Dominican Republic held general elections in July 2020, one of the first countries to hold elections during the pandemic in the Americas. On the elections day, 1,036 COVID cases were registered cases, with the cumulative highest number of cases up to that moment.
       </p>
+    <p class='turnout-title'>Voter turnout in <span class='dem'>democracies</span>, <span class='aut'>authoritarian</span>, and hybrid regimes</p>
     <div class="chart" bind:this={width}>
       <TurnoutChart data={dataTurnout} width={widthChart} x={xTurnout} xTicks = {xTicksTurn}/>
     </div>
     <div class="chart" bind:this={width} >
-      <TurnoutChart data={dataTurnoutDiff} width={widthChart} x={xTurnoutDiff} xTicks = {xTicksDiff}/>
+      <TurnoutChart data={dataTurnoutDiff} width={widthChart} x={xTurnoutDiff} xTicks={xTicksDiff}/>
     </div>
   </section>
   <section class="textblocks">
@@ -408,7 +408,7 @@ annotation.show();
     <p class="para last">Perhaps, in those countries where lockdowns were the most severe, turnout was lower?</p>
   </section>
   <div class="chart" id="turnout-stringency-chart" bind:this={width}>
-    <TurnoutStringency data={dataTurnoutStringency} width={widthChart} y={stringentChartY} {yTick} {yTickLabel} {regY} {yHorisontal} {turnoutLabel} {rectTurnoutStringency} {regionsHighlight}/>
+    <TurnoutStringency width={widthChart} y={stringentChartY} {yTickLabel} {yHorisontal} {turnoutLabel} {rectTurnoutStringency} {regionsHighlight}/>
   </div>
     <article class="scrolls">
       <p class="step" id="turnout-step-1">Data shows, that while there was a negative relationsip between turnout and stringency measures, the relatinship is quite weak.</p>
@@ -536,7 +536,7 @@ h1 {
 }
 
 .aut {
-  background: rgba(217, 128, 140, 0.4) ;
+  background: rgba(217, 128, 140, 0.3) ;
   background-repeat: no-repeat;
   background-size: 100% 90%;
   background-position: 0 100%;
@@ -545,7 +545,7 @@ h1 {
 }
 
 .dem {
-  background: rgba(112, 153, 250, 0.4);
+  background: rgba(112, 153, 250, 0.3);
   background-repeat: no-repeat;
   background-size: 100% 90%;
   background-position: 0 100%;
@@ -596,5 +596,15 @@ a {
 .tooltip:hover .tooltiptext {
   visibility: visible;
 }
+
+.turnout-title {
+  position: relative;
+  left: -20%;
+  top: 50px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  fill: rgb(66, 66, 66);
+}
+
 
 </style>

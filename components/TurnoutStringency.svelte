@@ -1,11 +1,12 @@
 <script>
-  import { scaleLinear, extent, scaleOrdinal, line } from 'd3';
+  import { scaleLinear, extent, line } from 'd3';
   import { regressionLinear} from 'd3-regression'
   import { fade } from 'svelte/transition';
   import { interpolatePath } from "d3-interpolate-path";
   import { tweened } from "svelte/motion";
   import  {_} from 'lodash';
-  export let data;
+  import dataRaw from '../public/data/dataFinal9';
+  // export let data;
   export let width;
   // export let y = 'yTurnout';
   // export let yTick = 'turnoutScaled';
@@ -17,9 +18,28 @@
   export let rectTurnoutStringency = '';
   export let regionsHighlight = '';
 
+
+  const data = _.chain(dataRaw.filter(d => d.turnout_reg_votes && d.stringency_index))
+    .map((d) => {
+      return {
+        stringency_index: +d.stringency_index,
+        turnout_reg_votes: d.turnout_reg_votes,
+        turnoutDiff: d.turnoutDiff,
+        country: d.country,
+        d: d.d,
+        d1: d.d1,
+        d4: d.d4,
+        demIndexCat: d.demIndexCat,
+        continent: d.continent,
+      }
+    })
+    .sortBy('turnoutDiff')
+    .reverse()
+    .value();
+
   // const continents = ["Europe","Middle East","Africa","Americas","Asia-Pacific"];
 
-  const margin= { top:25, right:200, bottom:60, left:200 };
+  const margin = { top:25, right:200, bottom:60, left:200 };
   const backgroundColor = "#f0e8e5";
 
   $: height = width/2;
@@ -122,7 +142,6 @@
 
   $: horizLinePathData.set(horizLinePath(horisontalLineData))
 
-  // $: console.log(data)
 
 </script>
 <svg width={width} height={height}>
@@ -185,11 +204,11 @@
     <line
       x1="{xScaleStringency(50)+8}"
       x2="{xScaleStringency(50)+8}"
-      y1="{20}"
+      y1="20"
       y2="{height-40}"
       stroke="#414141"
       stroke-width="1"
-      opacity="0.4">
+      opacity="0.2">
       >
     </line>
 
@@ -225,10 +244,10 @@
   stroke='#414141'
   fill='none'
   stroke-width='1'
-  opacity='0.4'
+  opacity='0.2'
   >
   </path>
-  <text x="{margin.left/1.7}" y="{12}" fill='#000' opacity='0.7'>{turnoutLabel}</text>
+  <text x="{margin.left/1.7}" y="12" fill='#000' opacity='0.7'>{turnoutLabel}</text>
   <text x="{width-(margin.left*1.3)}" y="{height-5}" fill='#000' opacity='0.7'>stringency index</text>
   {#if rectTurnoutStringency}
     <g transition:fade>
