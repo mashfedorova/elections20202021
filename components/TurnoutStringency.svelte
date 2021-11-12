@@ -39,10 +39,13 @@
 
   // const continents = ["Europe","Middle East","Africa","Americas","Asia-Pacific"];
 
-  const margin = { top:25, right:200, bottom:60, left:200 };
+  const margin = { top:30, right:20, bottom:100, left:20 };
   const backgroundColor = "#f0e8e5";
 
-  $: height = width/2;
+  $: widthUpdated = width/2;
+  $: height = width;
+
+  // $: console.log(widthUpdated, height, width)
 
   $: extentStringency = extent(data, d => d.stringency_index);
   // $: extentTurnout = extent(data, d => d.turnout_reg_votes);
@@ -69,7 +72,7 @@
   // .domain(continents)
   // .range(['#89848a', '#89848a', '#22ab83', '#89848a', '#89848a'])
 
-  $: stringencyRange = _.range(10, 100, 10);
+  $: stringencyRange = _.range(20, 100, 10);
   // $: turnoutRange = y === 'yTurnout' ? _.range(20, 110, 10) : _.range(-25, 20, 5);
 
   $: yTurnout = _.range(20, 110, 10);
@@ -248,12 +251,12 @@
   >
   </path>
   <text x="{margin.left/1.7}" y="12" fill='#000' opacity='0.7'>{turnoutLabel}</text>
-  <text x="{width-(margin.left*1.3)}" y="{height-5}" fill='#000' opacity='0.7'>stringency index</text>
+  <text x="{width-(margin.left*5.2)}" y="{height-5}" fill='#000' opacity='0.7'>stringency index</text>
   {#if rectTurnoutStringency}
     <g transition:fade>
-      <rect x="{xScaleStringency(51)}" y="{yScale(-1)}" width="{width-160-xScaleStringency(51)}" height="{height-yScale(-4)}" fill="#709afa" opacity="0.1"></rect>
-      <text x="{width-(margin.left*3)}" y="{height-100}" fill='#709afa' opacity='0.7'>High stringency measures and lower turnout</text>
-      <text x="{width-(margin.left*3)}" y="{height-80}" fill='#709afa' opacity='0.7'>in comparison to the previous election</text>
+      <rect x="{xScaleStringency(51)}" y="{yScale(-1)}" width="{width-xScaleStringency(49)}" height="{height-yScale(-4)}" fill="#709afa" opacity="0.1"></rect>
+      <text x="{width-(margin.left*15)}" y="{height-150}" fill='#709afa' opacity='0.7'>High stringency measures and lower turnout</text>
+      <text x="{width-(margin.left*15)}" y="{height-130}" fill='#709afa' opacity='0.7'>in comparison to the previous election</text>
     </g>
   {/if}
 

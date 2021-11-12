@@ -100,10 +100,10 @@
 
   <line x1='{medianTurnout+3}' x2='{medianTurnout+3}' y1='{height/2-10}' y2='{height/2+20}' stroke='#525252' stroke-linecap="round"  stroke-dasharray="4" stroke-width='2'></line>
 
-  <g transform="translate({medianTurnout-10},50)">
-    <path d="M13,80 C10,80 20,60 30,65" fill="none" stroke="#525252"></path>
+  <g transform="translate({medianTurnout-7},45)">
+    <path d="M10,93 L10,90 C10,75 20,70 30,70 L 37,70" fill="none" stroke="#525252"></path>
   </g>
-  <text  class="country-labels" x={xScaleTurnout(64.5)} y="120">median</text>
+  <text  class="country-labels" x={xScaleTurnout(65.5)} y="119">median</text>
    {/if}
   {#if xTicks === 'difference'}
     <text  class="chart-title" x={margin.left-40} y={margin.top*2}>Difference in turnout in comparison to the previous election</text>

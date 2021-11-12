@@ -4,13 +4,10 @@
   import { fade } from 'svelte/transition';
   import  { _ } from 'lodash';
   import rough from 'roughjs/bundled/rough.cjs';
-  // import { Line } from 'rough-svelte';
 
   export let data;
-  export let width = 0;
   export let cancelledBallots;
   export let monthsRaw;
-  const marginDem = { top:25, right:250, bottom:40, left:250 };
   const modifier = 10;
   export let whichY = 'y';
   export let whichX = 'x';
@@ -24,6 +21,7 @@
   export let legend;
   export let opacityValue;
   export let highlightLines;
+  export let width;
 
 
 
@@ -31,12 +29,31 @@ const backgroundColor = "#f0e8e5";
 // import testing from "./../public/data/test.js";
 // import dataLines from "./../public/data/dataLines.js";
 
-$: margin = { top:20, right:100, bottom:30, left:marginLeft };
+let margin;
+$: if (width < 550 && legend === 'no') {
+  margin = { top:5, right:20, bottom:30, left:5 };
+} else if (width < 920 && legend === 'yes') {
+  margin = { top:20, right:30, bottom:30, left:110 };
+} else {
+  margin = { top:20, right:100, bottom:30, left:marginLeft };
+}
 
-$: alldates = extent(constData, d => d.heldMonthYearDate)
+let marginDem;
+$: if (width < 920) {
+  marginDem = { top:25, right:10, bottom:40, left:5 };
+} else {
+  marginDem = { top:25, right:250, bottom:40, left:250 };
+}
 
-$: months = monthsRaw.map(date => timeParse("%B %Y")(date))
 $: height = width/2;
+
+$: console.log(width, margin, marginDem);
+
+$: alldates = extent(constData, d => d.heldMonthYearDate);
+
+$: months = monthsRaw.map(date => timeParse("%B %Y")(date));
+const monthsSmall = ["March 2020","December 2020","June 2021"];
+const monthsSmallDates = monthsSmall.map(date => timeParse("%B %Y")(date))
 
 $: xScaleTicks = scaleTime()
   .domain(extent(months, d => d))
@@ -95,7 +112,8 @@ return {
   yPost: yScalePostponed(d.country),
   country: d.country,
   opacity: highlighApr === 'no' ? '1' : highlighApr === 'yes' && d.heldMonth === 'April' && d.heldYear === '2020'  ? '1' :  '0.2',
-  opFadeout: '0.2'
+  opFadeout: '0.2',
+  country: d.country
 };
 });
 
@@ -118,7 +136,9 @@ return {
   opacityDiff: scaleOpacity(d.heldDiff),
   opacity: highlighApr === 'no' ? '1' : highlighApr === 'yes' && d.heldMonth === 'April' && d.heldYear === '2020'  ? '1' : '0.2',
   opacityLines: highlightLines === 'no' ? '1' : d.country === 'Ethiopia' ? '1' : '0.3',
-  opFadeout: '0.2'
+  opFadeout: '0.2',
+  country: d.country,
+  demIndexCat: d.demIndexCat
 
 };
 });
@@ -132,7 +152,9 @@ return {
   d4: d.d4,
   yDem: yScaleDem(d.demIndexScaleY),
   xDem: xScaleDem(d.demIndexScaleX),  country: d.country,
-  opacityLines: highlightLines === 'no' ? '1' : d.country === 'Ethiopia' ? '1' : '0.3'
+  opacityLines: highlightLines === 'no' ? '1' : d.country === 'Ethiopia' ? '1' : '0.3',
+  country: d.country,
+  demIndexCat: d.demIndexCat
 
 };
 });
@@ -155,6 +177,10 @@ return {
 };
 });
 
+$: dataRegime1 = dataPostponedCalc.filter(d => d.country === 'Chile');
+$: dataRegime2 = cancelledBallotsData.filter(d => d.country === 'Armenia' || d.country === 'Chad' || d.country === 'Somalia');
+
+// $: console.log(dataHeldCalc)
 // const sel = select(this);
 // const svg = sel.append('svg').attr('class', 'control');
 // const rs = rough.svg(svg.node());
@@ -167,7 +193,6 @@ return {
 //   const svg = document.getElementById('svg');
 //   const rs = rough.svg(svg.node());
 
-// console.log(rs)
 
 // onMount(() => {
 //   const svg = document.getElementById('svg');
@@ -182,7 +207,6 @@ return {
 //       // svg.appendChild(rc.line(356 ,20 ,356,20));
 //   // svg.appendChild(rc.circle(80, 120, 50));
 //     })
-// console.log(dataLines)
 
     //   <line
     // in:fade="{{duration:100, delay: 500}}"
@@ -197,13 +221,12 @@ return {
     // ></line>
   // })
 
-  // console.log(svg)
 </script>
-
 
 <svg width={width} height={height} id="svg">
 
-  {#each dataHeldCalc as d}
+  {#if width > 920}
+    {#each dataHeldCalc as d}
   <g class="animate"
   transform="translate({d[whichX]}, {d[whichY]})"
   in:fade="{{delay: d[whichX]*2}}"
@@ -290,9 +313,9 @@ return {
               opacity={highlighApr === 'yes' ? 0.5 : colorBallot === 'no' ? '0.9' : d.opacityDiff}
               filter='url(#highlight)'>
           </rect>
+
       </g>
     {/each}
-
 
   {#each dataPostponedDates as d}
       <g class="animate"
@@ -333,20 +356,6 @@ return {
         </text>
     {/each}
 
-    {#if width<1050}
-      {#each months as month}
-      <g class="tick-small" transform="translate({xScaleTicks(month)}, {height-margin.bottom+15})">
-        <text x="0" y="0" fill='#000' opacity='0.7' fade:in>{timeFormat("%b")(month)}</text>
-      </g>
-    {/each}
-      {:else}
-    {#each months as month }
-      <g class="tick" transform="translate({xScaleTicks(month)-modifier}, {height-margin.bottom+20})">
-        <text x="0" y="0" fill='#000' opacity='0.7' fade:in>{timeFormat("%b %y")(month)}</text>
-      </g>
-    {/each}
-    {/if}
-
     {#each cancelledBallotsData as d}
       <g class="animate" style="--x: {d[whichX]}px; --y: {d[whichY]}px;" in:fade="{{duration: 500}}" out:fade="{{duration: 100}}">
         <path
@@ -379,18 +388,162 @@ return {
           opacity="0.8"
           filter='url(#highlight)'>
           </rect>
+
         <!-- </g> -->
       </g>
     {/each}
 
-    {#each regimes as d}
-      <text class="regimes" x={xScaleTextReg(d)} y={yScaleTextReg(d)} in:fade="{{duration: 200, delay: 500}}">{d}</text>
+    {#each dataPostponedDates.filter(d => d.country === 'Syria') as d}
+      <text  class="post-label" x={d.xPost1-24} y='{d.yPost-5}'>postponed</text>
     {/each}
 
-      {#if legend === 'yes'}
-        <text class="post-label" transition:fade="{{delay: 600, duration: 100}}" x="26%" y="10"> postponed</text>
-        <text class="post-label" transition:fade="{{delay: 600, duration: 100}}" x="41.5%" y="10"> held</text>
-      {/if}
+    {#each dataPostponedDates.filter(d => d.country === 'Syria') as d}
+      <text  class="post-label" x='{d.xHeld-7}' y='{d.yHeld-5}'>held</text>
+    {/each}
+
+    {#if regimes === 'yes'}
+    {#each dataRegime1 as d}
+      <text class="regimes" x='{d[whichX]}' y='{d[whichY]-10}' in:fade="{{duration: 200, delay: 500}}">{d.demIndexCat}</text>
+    {/each}
+
+    {#each dataRegime2 as d}
+      <text class="regimes" x='{d[whichX]}' y='{d[whichY]-10}' in:fade="{{duration: 200, delay: 500}}">{d.demIndexCat}</text>
+    {/each}
+    {/if}
+
+
+    <!-- {#if legend === 'yes'}
+      <text class="post-label" transition:fade="{{delay: 600, duration: 100}}" x="26%" y="10"> postponed</text>
+      <text class="post-label" transition:fade="{{delay: 600, duration: 100}}" x="41.5%" y="10"> held</text>
+    {/if} -->
+
+
+    {/if}
+
+  <!-- smaller screens -->
+  {#if width < 920}
+    {#each dataHeldCalc as d}
+      <rect
+      in:fade="{{delay: d[whichX]*2}}"
+      x='{d[whichX]}'
+      y='{d[whichY]}'
+      width='7'
+      height='8'
+      fill={backgroundColor}
+      stroke='#000'
+      opacity={d[opacityValue]}
+      ></rect>
+    {/each}
+
+{#each dataPostponedDates as d}
+        <!-- svelte-ignore component-name-lowercase -->
+        <line
+        in:fade="{{duration:100, delay: 500}}"
+        x1={d.xPost1+2}
+        x2={d.xHeld}
+        y1={d.yPost+15}
+        y2={d.yHeld+15}
+        stroke={ScaleColorReg(d.reg)}
+        stroke-width='2'
+        stroke-opacity={highlightLines === 'no' ? d.opacityDiff : highlightLines === 'yes' && d.country === 'Ethiopia' ? d.opacityDiff : d.opacityLines }
+        opacity={d[opacityValue]}
+        ></line>
+  {/each}
+
+  {#each dataPostponedCalc as d}
+      <rect
+      in:fade="{{delay: d[whichX]*2}}"
+      x='{d[whichX]}'
+      y='{legend === 'yes' ? d[whichY]+10 : d[whichY] }'
+      width='7'
+      height='8'
+      fill={colorBallot === 'no' ? '#709afa' : ScaleColorReg(d.reg)}
+      stroke='#000'
+      opacity={d[opacityValue]}
+      ></rect>
+  {/each}
+
+  {#each dataPostponedDates as d}
+      <!-- <rect
+      x='{d.xPost1}'
+      y='{d.yPost}'
+      width='5'
+      height='5'
+      fill={colorBallot === 'no' ? '#709afa' : ScaleColorReg(d.reg)}
+      opacity={highlighApr === 'yes' ? 0.5 : colorBallot === 'no' ? '0.9' : d.opacityDiff}
+      filter='url(#highlight)'
+      ></rect> -->
+      <text class="country-label-postponed"
+      in:fade="{{delay: 100}}"
+      opacity={d[opacityValue]}
+      x={10}
+      y={d.yPost+20}>
+      {d.country}
+      </text>
+    {/each}
+
+    {#each cancelledBallotsData as d}
+      <rect
+      x='{d[whichX]}'
+      y='{d[whichY]}'
+      width='7'
+      height='8'
+      fill="#89848a"
+      stroke='#000'
+      opacity="0.8"
+      ></rect>
+    {/each}
+
+      {#each dataPostponedDates as d}
+      <rect
+      x='{d.xPost1}'
+      y='{d.yPost+10}'
+      width='7'
+      height='8'
+      fill={backgroundColor}
+      stroke='#000'
+      opacity="0.8"
+      ></rect>
+    {/each}
+
+      {#each dataPostponedDates.filter(d => d.country === 'Syria') as d}
+        <text  class="post-label-small" x={d.xPost1-28} y='{d.yPost-5}'>postponed</text>
+      {/each}
+
+      {#each dataPostponedDates.filter(d => d.country === 'Syria') as d}
+        <text  class="post-label-small" x='{d.xHeld-15}' y='{d.yHeld-5}'>held</text>
+      {/each}
+
+    {#if regimes === 'yes'}
+    {#each dataRegime1 as d}
+      <text class="regimes-small" x='{d[whichX]}' y='{d[whichY]-7}' in:fade="{{duration: 200, delay: 500}}">{d.demIndexCat}</text>
+    {/each}
+    {#each dataRegime2 as d}
+      <text class="regimes-small" x='{d[whichX]}' y='{d[whichY]-10}' in:fade="{{duration: 200, delay: 500}}">{d.demIndexCat}</text>
+    {/each}
+    {/if}
+
+  {/if}
+
+    {#if width<460}
+      {#each monthsSmallDates as month}
+      <g class="tick-small" transform="translate({xScaleTicks(month)}, {height-margin.bottom+15})">
+        <text x="0" y="0" fill='#000' opacity='0.7' fade:in>{timeFormat("%b")(month)}</text>
+      </g>
+    {/each}
+      {:else if width>459 && width < 1100}
+    {#each months as month }
+      <g class="tick=small" transform="translate({xScaleTicks(month)-modifier}, {height-margin.bottom+20})">
+        <text x="0" y="0" fill='#000' opacity='0.7' fade:in>{timeFormat("%b")(month)}</text>
+      </g>
+    {/each}
+    {:else}
+    {#each months as month }
+      <g class="tick" transform="translate({xScaleTicks(month)-modifier}, {height-margin.bottom+20})">
+        <text x="0" y="0" fill='#000' opacity='0.7' fade:in>{timeFormat("%b %y")(month)}</text>
+      </g>
+      {/each}
+    {/if}
 
       <defs>
         <filter id="highlight">
@@ -431,7 +584,25 @@ svg {
   .post-label {
     letter-spacing: 0.1em;
     fill: rgb(117, 117, 117)
-
   }
+
+  @media only screen and (max-width: 460px) {
+    .country-label-postponed {
+      font-size: 12px;
+    }
+
+      .post-label-small {
+        letter-spacing: 0em;
+        fill: rgb(117, 117, 117);
+        font-size: 13px;
+      }
+
+      .regimes-small {
+        letter-spacing: 0em;
+      }
+  }
+
+
+
 
 </style>
