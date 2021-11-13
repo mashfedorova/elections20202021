@@ -7,7 +7,15 @@
   export let xTicks;
 
 
-  const margin= { top:25, right:200, bottom:40, left:200 };
+  // const margin= { top:25, right:200, bottom:40, left:200 };
+
+let margin;
+$: if (width < 920) {
+  margin= { top:25, right:25, bottom:40, left:10 };
+} else {
+  margin= { top:25, right:200, bottom:40, left:200 };
+}
+
   const continents = ["Europe","Middle East","Africa","Americas","Asia-Pacific"];
   const regimes = ["democracy","unclassified","authoritarian regime","hybrid regime"];
   const backgroundColor = "#f0e8e5";
@@ -64,10 +72,7 @@
 </script>
 
 <svg width={width} height={height}>
-   {#each dataCalc as d}
-    <rect width='7' height='8' x={d.x} y={d.y}  fill={d.color} stroke='#191919' stroke-width={d.mandatoryVoting ? '2' : '1'}></rect>
-  {/each}
-  {#if xTicks === 'turnout'}
+  {#if width > 920 && xTicks === 'turnout'}
     <!-- <text  class="chart-title"x={margin.left-40} y={margin.top}>Voter turnout in </text>
     <text  class="chart-title"x={margin.left+90} y={margin.top}>democracies, </text>
     <text  class="chart-title"x={margin.left+200} y={margin.top}>authoritarian regimes</text>
@@ -105,8 +110,11 @@
   </g>
   <text  class="country-labels" x={xScaleTurnout(65.5)} y="119">median</text>
    {/if}
-  {#if xTicks === 'difference'}
-    <text  class="chart-title" x={margin.left-40} y={margin.top*2}>Difference in turnout in comparison to the previous election</text>
+   {#each dataCalc as d}
+    <rect width='7' height='8' x={d.x} y={d.y}  fill={d.color} stroke='#191919' stroke-width={d.mandatoryVoting ? '2' : '1'}></rect>
+  {/each}
+
+  {#if width > 920 && xTicks === 'difference'}
   <g>
     {#each xTicksTurnoutDiff as tick}
     <g class="tick" transform="translate({xScaleTurnoutDiff(tick)}, {height-margin.bottom})">
@@ -134,13 +142,66 @@
 
   <line x1='{medianTurnoutDiff+3}' x2='{medianTurnoutDiff+3}' y1='{height/2-15}' y2='{height/2+25}' stroke='#525252' stroke-linecap="round" stroke-dasharray="4" stroke-width='3'></line>
 
-  {/if}
-  <text  class="source" x={margin.left} y={height - (margin.bottom/2)}>Source: International IDEA Voter Turnout <a href="https://www.idea.int/data-tools/data/voter-turnout" target="_blank">Database</a></text>
-  <text  class="source" x={margin.left} y={height - (margin.bottom/4.5)}>Referendums were excluded</text>
   <rect width='7' height='8' x='68%' y='10%' fill='{backgroundColor}' stroke='#191919' stroke-width='1'></rect>
   <text  class="country-labels" x='69.5%' y='13%'>One rectangle represents one election</text>
   <rect width='7' height='8' x='68%' y='15%' fill='{backgroundColor}' stroke='#191919' stroke-width='2'></rect>
   <text  class="country-labels" x='69.5%' y='18%'>Compulsory voting</text>
+  {/if}
+
+  {#if width < 920 && width > 500 && xTicks === 'difference'}
+    {#each xTicksTurnoutDiff as tick}
+    <g class="tick" transform="translate({xScaleTurnoutDiff(tick)}, {height-margin.bottom})">
+      <text x="0" y="0" fill='#000' opacity='0.7' fade:in>{tick}</text>
+    </g>
+  {/each}
+  {/if}
+
+
+  {#if width < 920 && width > 500 && xTicks === 'turnout'}
+    {#each xTicksTurnout as tick }
+    <g class="tick" transform="translate({xScaleTurnout(tick)}, {height-margin.bottom})">
+      <text x="0" y="0" fill='#000' opacity='0.7' fade:in>{tick}</text>
+    </g>
+  {/each}
+  {/if}
+
+  {#if width < 500 && xTicks === 'turnout'}
+    {#each xTicksTurnout as tick }
+    <g class="tick" transform="translate({xScaleTurnout(tick)}, {height-margin.bottom})">
+      <text x="0" y="20" fill='#000' opacity='0.7' fade:in>{tick}</text>
+    </g>
+    {/each}
+  {/if}
+
+    {#if width < 500 && xTicks === 'difference'}
+    {#each xTicksTurnoutDiff as tick }
+    <g class="tick" transform="translate({xScaleTurnoutDiff(tick)}, {height-margin.bottom})">
+      <text x="0" y="20" fill='#000' opacity='0.7' fade:in>{tick}</text>
+    </g>
+  {/each}
+  {/if}
+
+  {#if width>500 && xTicks === 'turnout'}
+  <text  class="source" x={margin.left} y={height - (margin.bottom/2)}>Source: International IDEA Voter Turnout <a href="https://www.idea.int/data-tools/data/voter-turnout" target="_blank">Database</a></text>
+  <text  class="source" x={margin.left} y={height - (margin.bottom/4.5)}>Referendums were excluded</text>
+  {/if}
+<!--
+  {#if width < 1220 && width > 700 && xTicks === 'difference'}
+    <text  class="chart-title-small" x="230" y="25">Difference in turnout in comparison to the previous election</text>
+  {/if}
+
+  {#if width < 699 && xTicks === 'difference'}
+    <text  class="chart-title-small" x="5" y="15">Difference in turnout in comparison to the previous election</text>
+  {/if}
+
+  {#if width > 1220 && xTicks === 'difference'}
+    <text  class="chart-title" x={margin.left-40} y={margin.top*2}>Difference in turnout in comparison to the previous election</text>
+
+  {/if} -->
+
+  <!-- {#if width > 1220 && xTicks === 'difference'}
+    <text  class="chart-title" x={margin.left-40} y={margin.top*2}>Difference in turnout in comparison to the previous election</text>
+  {/if} -->
 
 </svg>
 
@@ -154,7 +215,14 @@
   font-size: 1.2rem;
   font-weight: bold;
   fill: rgb(66, 66, 66);
+  font-weight: bold;
 }
+
+.chart-title-small {
+  font-size: 1rem;
+  fill: rgb(66, 66, 66);
+}
+
 
 .source {
  color: rgb(97, 94, 92);

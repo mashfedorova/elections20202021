@@ -40,12 +40,13 @@
   // const continents = ["Europe","Middle East","Africa","Americas","Asia-Pacific"];
 
   const margin = { top:30, right:20, bottom:100, left:20 };
+
   const backgroundColor = "#f0e8e5";
 
   $: widthUpdated = width/2;
   $: height = width;
 
-  // $: console.log(widthUpdated, height, width)
+  $: console.log("width is:", width)
 
   $: extentStringency = extent(data, d => d.stringency_index);
   // $: extentTurnout = extent(data, d => d.turnout_reg_votes);
@@ -148,6 +149,7 @@
 
 </script>
 <svg width={width} height={height}>
+  {#if width > 613}
   {#each dataCalc as d}
     <g
     class="animate"
@@ -181,8 +183,20 @@
     </g>
     </g>
   {/each}
+  {:else}
+    {#each dataCalc as d}
+      <rect
+      x='{d.x}'
+      y='{d.yScaled}'
+      width='7'
+      height='8'
+      fill={regionsHighlight && d.continent === "Africa" ? '#22ab83': backgroundColor}
+      stroke='#000'
+      ></rect>
+  {/each}
+  {/if}
 
-  {#if regionsHighlight}
+  {#if regionsHighlight && width > 613}
   {#each dataCalc.filter(d => d.continent === 'Africa') as d}
     <g transform="translate({d.x}, {d.yScaled}) scale(0.7)">
       <rect transition:fade
@@ -217,7 +231,7 @@
 
   {#each yTicks as tick }
     <!-- <g class="tick-y" transform="translate({margin.left*0.6}, {tick[yTick]+11})" > -->
-      <text class="tick-y" x="{margin.left*0.6}" y="{tick.yScaled+11}" fill='#000' opacity='0.7'>
+      <text class="tick-y" x="{margin.left*0.1}" y="{tick.yScaled+11}" fill='#000' opacity='0.7'>
         {tick[yTickLabel]}
       </text>
     <!-- </g>  in:fade="{{delay: 100}}"-->
@@ -252,7 +266,7 @@
   </path>
   <text x="{margin.left/1.7}" y="12" fill='#000' opacity='0.7'>{turnoutLabel}</text>
   <text x="{width-(margin.left*5.2)}" y="{height-5}" fill='#000' opacity='0.7'>stringency index</text>
-  {#if rectTurnoutStringency}
+  {#if rectTurnoutStringency && width > 613}
     <g transition:fade>
       <rect x="{xScaleStringency(51)}" y="{yScale(-1)}" width="{width-xScaleStringency(49)}" height="{height-yScale(-4)}" fill="#709afa" opacity="0.1"></rect>
       <text x="{width-(margin.left*15)}" y="{height-150}" fill='#709afa' opacity='0.7'>High stringency measures and lower turnout</text>
@@ -271,6 +285,10 @@
 .animate {
   transition: transform 0.6s ease-out;
   transform: translate(var(--x), var(--y));
+}
+
+rect {
+  transition: all 0.6s ease-out;
 }
 
 </style>

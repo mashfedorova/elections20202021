@@ -412,6 +412,7 @@ onMount(() => {
     <div class="chart" bind:this={width}>
       <TurnoutChart data={dataTurnout} width={widthChart} x={xTurnout} xTicks = {xTicksTurn}/>
     </div>
+    <p class='turnout-title'>Difference in turnout in comparison to the previous election</p>
     <div class="chart" bind:this={width} >
       <TurnoutChart data={dataTurnoutDiff} width={widthChart} x={xTurnoutDiff} xTicks={xTicksDiff}/>
     </div>
@@ -428,7 +429,7 @@ onMount(() => {
       <p class="step" id="turnout-step-1">Data shows, that while there was a negative relationsip between turnout and stringency measures, the relatinship is quite weak.</p>
       <p class="step" id="turnout-step-2">When we compare turnout during the pandemic with previous elections in the country, the relationshio becomes more evident. In those countries where more stringent measures were implemented, turnout was lower than in the previous election. Approximately half of all elections between March 2020 and June 2021 had lower or the same turnout as in the previous election and had higher stringency index.
       </p>
-      <section class="step" id="turnout-step-3">
+      <section class="step step-last-one" id="turnout-step-3" >
         <p>Elections during pandemic in <span id='africa'>Africa</span> tended to have higher turnout than in the previous election and lower stringency index than elections in other countries. Eight out of 11 elections with higher turnout and low stringency measures were in Africa. </p>
       </section>
     </article>
@@ -497,7 +498,7 @@ h1 {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 50vh;
+  /* height: 50vh; */
 }
 
  .step {
@@ -514,6 +515,11 @@ h1 {
   font-size: 1.2rem;
   position: relative;
 }
+
+
+ /* .step-last-one {
+  margin-bottom: 60vh;
+} */
 
 #step-1 {
   margin-top: 0;
@@ -620,6 +626,15 @@ a {
   font-weight: bold;
   fill: rgb(66, 66, 66);
 }
+
+  @media only screen and (max-width: 1220px) {
+    .turnout-title {
+      position: relative;
+      left: 0%;
+      top: 50px;
+      font-size: 1rem;
+    }
+  }
 
 
 </style>
