@@ -443,7 +443,7 @@ onMount(() => {
 <style>
 
 .intro {
-   margin: 0 auto;
+  margin: 0 auto;
   max-width: 650px;
 }
 

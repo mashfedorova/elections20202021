@@ -46,7 +46,7 @@
   $: widthUpdated = width/2;
   $: height = width;
 
-  $: console.log("width is:", width)
+  // $: console.log("width is:", width)
 
   $: extentStringency = extent(data, d => d.stringency_index);
   // $: extentTurnout = extent(data, d => d.turnout_reg_votes);

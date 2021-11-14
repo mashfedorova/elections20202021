@@ -1,6 +1,6 @@
 <script>
-  import { scaleTime, scaleLinear, extent, max, timeFormat, timeParse, scaleBand, scaleOrdinal, map, line, curveBumpY, select} from 'd3';
-  import { onMount } from 'svelte/internal';
+  import { scaleTime, scaleLinear, extent, max, timeFormat, timeParse, scaleBand, scaleOrdinal, map, select, selectAll, transition} from 'd3';
+  import { onMount, afterUpdate, beforeUpdate } from 'svelte/internal';
   import { fade } from 'svelte/transition';
   import  { _ } from 'lodash';
   import rough from 'roughjs/bundled/rough.cjs';
@@ -22,6 +22,26 @@
   export let opacityValue;
   export let highlightLines;
   export let width;
+
+  const tooltip = select("body").append("div")
+  .attr("class", "tooltip")
+  .style("text-align", "center")
+  .style("display", "block")
+  .style("position", "absolute")
+  .style("visibility", "hidden")
+  .style("font-size", "1rem")
+  .style('font-family', 'Montaga')
+  .style("background", "rgba(255,255,255,0.9)")
+  .style("padding", "0.1rem 0.5rem")
+  .style("color", "grey")
+  .style("border-radius", "5px")
+  .style("border", "1px solid grey")
+  // .style("transform", "translate(-30%, -50%)")
+  .style("pointer-events", "none")
+  // .style("cursor", "pointer")
+  .style("z-index", "11")
+
+
 
 
 
@@ -47,7 +67,7 @@ $: if (width < 920) {
 
 $: height = width/2;
 
-$: console.log(width, margin, marginDem);
+// $: console.log(width, margin, marginDem);
 
 $: alldates = extent(constData, d => d.heldMonthYearDate);
 
@@ -221,9 +241,95 @@ $: dataRegime2 = cancelledBallotsData.filter(d => d.country === 'Armenia' || d.c
     // ></line>
   // })
 
+//  $:svg = select('svg')
+//  $: ballots = svg.selectAll('.animate')
+//  .data(dataHeldCalc)
+
+//   $: console.log(ballots)
+//   $: ballots.on("mouseover", (event, d) => {
+//         const current = event.currentTarget;
+//         console.log(current)
+//         tooltip
+//           .style("visibility", "visible")
+//           .style("top", (d[whichY]) +"px")
+//           .style("left", (d[whichX]) + "px")
+//           .html(
+//             `<div>${d.country}</div>`
+//           )
+//   })
+
+
+$: svg = select('svg');
+$: ballots = svg.selectAll('.animate')
+      .data(dataHeldCalc)
+
+
+
+    afterUpdate(() => {
+    svg = select('svg')
+    // ballots = svg.selectAll('.animate')
+    //   .data(dataHeldCalc)
+
+      console.log("updated")
+
+  //   ballots.on("mouseover", (event, d) => {
+  //       const current = event.currentTarget;
+  //       console.log(current)
+  //       tooltip
+  //         .style("visibility", "visible")
+  //         .style("top", (d[whichY]) +"px")
+  //         .style("left", (d[whichX]) + "px")
+  //         .html(
+  //           `<div>${d.country}</div>`
+  //         )
+  // })
+
+  //     ballots.on("mouseout", (event,d) => {
+  //       tooltip.style("visibility", "hidden")
+  // })
+
+    //  console.log(current, "updated")
+  })
+
+// $: ballots.on("mouseover", (event, d) => {
+//         const current = event.currentTarget;
+//         console.log(current)
+//         tooltip
+//           .style("visibility", "visible")
+//           .style("top", (d[whichY]) +"px")
+//           .style("left", (d[whichX]) + "px")
+//           .html(
+//             `<div>${d.country}</div>`
+//           )
+//   })
+
+function handleMousemove() {
+   ballots.on("mouseenter", (event, d) => {
+        const current = event.currentTarget;
+        console.log(current)
+        tooltip
+          .style("visibility", "visible")
+          .style("left", event.pageX + "px")
+          .style("top", event.pageY + "px")
+          .html(
+            `<div>${d.country}</div>`
+          )
+  })
+}
+
+function handleMouseleave() {
+    ballots.on("mouseout", (event,d) => {
+    tooltip.style("visibility", "hidden")
+  })
+}
+
+
+  $:console.log(width, ballots)
+
 </script>
 
-<svg width={width} height={height} id="svg">
+<!-- <svg width={width} height={height} id="svg"   on:mouseenter={handleMousemove}> -->
+<svg width={width} height={height} id="svg" on:mouseenter={handleMousemove} on:mouseleave={handleMouseleave}>
 
   {#if width > 920}
     {#each dataHeldCalc as d}
@@ -601,8 +707,5 @@ svg {
         letter-spacing: 0em;
       }
   }
-
-
-
 
 </style>
