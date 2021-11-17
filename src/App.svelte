@@ -31,7 +31,7 @@ const parseMonthYear = timeParse("%B %Y");
 let monthsRaw = [];
 let regimes = 'no';
 let monthsList = ["April 2021","June 2021","November 2020","June 2020","August 2020","October 2020","December 2020","March 2021","July 2020",
-"May 2021","September 2020","February 2021","March 2020","January 2021","April 2020","May 2020"];
+"May 2021","September 2020","February 2021","March 2020","January 2021","April 2020","May 2020", "July 2021", "August 2021", "September 2021"];
 let dataPostponedBallots = [];
 let marginLeft = 100;
 let colorBallot = 'no';
@@ -174,7 +174,7 @@ function turnoutStep3Back() {
 
 onMount(
   async () => {
-  const dataRaw = await csv('data/dataFinal9.csv', d => {
+  const dataRaw = await csv('data/dataFinal12.csv', d => {
     return {
     ...d,
     position: +d.position,
@@ -240,29 +240,31 @@ onMount(
 
 });
 
+  // annotations
+  // function makeAnnotation(el, colorString) {
+  //   const annotatedEl = document.querySelector(el);
+  //   const annotation = annotate(annotatedEl, {
+  //     type: 'underline' ,
+  //     color: colorString,
+  //     animate: false,
+  //     // padding: 1
+  //   });
+  //   annotation.show();
+
+
+
+onMount(resize)
 onMount(resize)
 
 onMount(() => {
 
-  // annotations
-  function makeAnnotation(el, colorString) {
-    const annotatedEl = document.querySelector(el);
-    const annotation = annotate(annotatedEl, {
-      type: 'underline' ,
-      color: colorString,
-      animate: false,
-      padding: 1
-    });
-    annotation.show();
-  }
-
-  makeAnnotation( '#postponed','rgb(112, 153, 250, 0.7)');
-  makeAnnotation( '#postponedBlue','rgb(112, 153, 250, 0.7)');
-  makeAnnotation( '#postponedGray','#89848a');
-  makeAnnotation( '.aut','rgba(217, 128, 140, 0.5)');
-  makeAnnotation( '.dem','rgba(34, 171, 130, 0.5)');
-  makeAnnotation( '.hyb','rgba(112, 153, 250, 0.5)');
-  makeAnnotation( '#africa','#22ab83');
+  // makeAnnotation( '#postponed','rgb(112, 153, 250, 0.7)');
+  // makeAnnotation( '#postponedBlue','rgb(112, 153, 250, 0.7)');
+  // makeAnnotation( '#postponedGray','#89848a');
+  // makeAnnotation( '.aut','rgba(217, 128, 140, 0.5)');
+  // makeAnnotation( '.dem','rgba(34, 171, 130, 0.5)');
+  // makeAnnotation( '.hyb','rgba(112, 153, 250, 0.5)');
+  // makeAnnotation( '#africa','#22ab83');
 
   ScrollTrigger.create({
     trigger: '#intro-chart',
@@ -358,7 +360,7 @@ onMount(() => {
 </div>
 <article class="scrolls">
   <section class="step" id="step-1">
-    <p>Between March 2020 and June 2021, 89 elections were held in 76 countries, with 12 countries having held multiple elections during this period. Sixteen countries at some point had <span id="postponed">postponed</span> the election.</p>
+    <p>Between March 2020 and June 2021, 89 elections were held in 76 countries, with 12 countries having held multiple elections during this period. Sixteen countries at some point had <span class="postponed">postponed</span> the election.</p>
     {#if width > 920}
     <p>One ballot<svg width="28" transform="scale(0.6)" class="ballot-inline"><path d="M23.3,31C16.2,31,9,30.8,1.8,30.2C1.2,20.7,1.3,11.2,2,1.7c7.1-0.1,14.2,0.3,21.2,1C24.1,12.1,24.1,21.6,23.3,31z M12.7,12.3c2.8-0.4,5.6-0.6,8.5-0.5 M13.5,21.3l7.2,0.2 M5.9,10.7l1.9,3.4l3.6-7.6" stroke="#000" fill="#f0e8e5" stroke-width="2.7"></path><circle cx="8" cy="23" r="3" stroke="#000" fill="#f0e8e5" stroke-width="2"></circle></svg>represents one national election (either presedential or parliamentary), held on a given day and two ballots<svg width="29" transform="scale(0.6)" class="ballot-inline ballot-two"><path d="M23.3,28.1c-5.5,0.7-11.1,0.1-16.3-1.6c1-8.7,2.3-17,4-25c5.7-0.3,11.4,0.2,17,2.5C27.4,11.9,26.3,19.7,23.3,28.1z" stroke="#000" fill="#f0e8e5" stroke-width="2.5"></path><path d="M22.2,30.6c-6.3,1-12.7,1.8-19.1,2.3C1.6,24,1,15.1,1.4,6.2C7.3,5.6,13.1,5.1,19,4.9C19.8,13.4,20.5,21.9,22.2,30.6z M4.4,11.7c0.6,0.6,1.2,1.2,1.8,1.8c0.4-1.5,1.1-2.8,2-4 M11.6,11.4c1.1-0.4,2.3-0.6,3.6-0.6 M13.3,22.6c1.2-0.4,2.4-0.5,3.6-0.4" stroke="#000" fill="#f0e8e5" stroke-width="2.5"></path><circle cx="8" cy="23" r="3" stroke="#000" fill="#f0e8e5" stroke-width="2.5"></circle></svg>represent countries where citizens elected president and parliament on the same day. </p>
     {/if}
@@ -369,17 +371,16 @@ onMount(() => {
     <p><strong>South Korea</strong> was widely <a href="https://aceproject.org/ero-en/misc/elections-and-covid-19-technical-paper-by" target="_blank">praised </a>for measures implemented during the elections. Early voting was encouraged, home voting provisions were extended, and stringent measures were implemented at the polling stations. Public approval of the governemnt's handling of the pandemic was evident in a landslide victory of President Moon Jae-in’s governing party in parliamentary elections.</p>
     <p><strong>Kiribati</strong> went ahead with parliamentary elections, after having postpone them for a week because of disrupted public services. At the time of elections, however, there were no official cases of COVID-19 <a href='https://www.rnz.co.nz/international/pacific-news/414192/kiribati-goes-to-polls-as-normal-despite-covid-19-threat' target="_blank">recoded</a>.</p>
     {/if}
-
   </section>
   <section class="step" id="step-3">
     <p>Four countries - Chad, Haiti, Somalia and Armenia - postponed elections and to the momement of publication have not yet held these elections.</p>
     <p> Some of these countries had more reasons to postpone elections than others. Armenia declared a state of emergency, having the highest number of COVID-19 cases among countries in the South Caucasus region. Parlamentary elections in Chad, originally scheduled in 2015 had been <a href="https://www.dw.com/en/chad-tensions-rise-over-debys-presidential-run/a-56536855" target="_blank">repeatedly</a> postponed even before the pandemic. President Idriss Deby has ruled Chad for the past 30 years. </p>
   </section>
   <section class="step" id="step-4">
-    <p>Elections were <span id="postponedBlue">postponed</span>  in democracratic regimes, as well as in authoritarian. However, twice as many democracies postponed elections as autocracies. While democracies always held postponed elections later, non-democratic regimes had a tendency of postponing elections <span id='postponedGray'>indefinitely.</span></p>
+    <p>Elections were <span class="postponed">postponed</span>  in democracratic regimes, as well as in authoritarian. However, twice as many democracies postponed elections as autocracies. While democracies always held postponed elections later, non-democratic regimes had a tendency of postponing elections <span id='postponedGray'>indefinitely.</span></p>
   </section>
   <section class="step" id="step-5">
-    <p>Non-democratic regimes tended to postpone elections for a longer. While on average <span class="dem">democracies</span> postponed elections for approximately two months, <span class="aut">autocracies</span> and <span class="hyb">hybrid regimes</span> postponed electons on average for four months.</p>
+    <p>Non-democratic regimes tended to postpone elections for a longer. While on average <span class="demo">democracies</span> postponed elections for approximately two months, <span class="auto">autocracies</span> and <span class="hyb">hybrid regimes</span> postponed electons on average for four months.</p>
   </section>
   <section class="step" id="step-6">
     <p><strong>Ethiopia</strong> postponed parlamentary elections mutltiple times and for the longest period, for about ten months. In the end of August, when elections were originally scheduled 1,500 COVID-19 cases were recoded in the country,  one of the highest numbers during the pandemic up to this date. The <a href="https://www.aljazeera.com/opinions/2021/6/18/why-ethiopias-elections-should-be-postponed" target="_blank">postponement</a> of elections, done unilaterally by the countries prime minister Abiy Ahmed was met with critisism by his opponents. </p>
@@ -408,7 +409,7 @@ onMount(() => {
       <p class="para last">
         The Dominican Republic held general elections in July 2020, one of the first countries to hold elections during the pandemic in the Americas. On the elections day, 1,036 COVID cases were registered cases, with the cumulative highest number of cases up to that moment.
       </p>
-    <p class='turnout-title'>Voter turnout in <span id='demo'>democracies</span>, <span id='auto'>authoritarian</span>, and hybrid regimes</p>
+    <p class='turnout-title'>Voter turnout in <span class='demo'>democracies</span>, <span class='auto'>authoritarian</span>, and hybrid regimes</p>
     <div class="chart" bind:this={width}>
       <TurnoutChart data={dataTurnout} width={widthChart} x={xTurnout} xTicks = {xTicksTurn}/>
     </div>
@@ -530,14 +531,6 @@ h1 {
 } */
 
 
-#postponed {
-  /* background: rgb(112, 153, 250, 0.4);
-  background-repeat: no-repeat;
-  background-size: 100% 90%;
-  background-position: 0 100%;
-  padding-left: 2px;
-  padding-right: 2px; */
-}
 
 .ballot-inline {
   max-height: 1em;
@@ -550,13 +543,8 @@ h1 {
 
 }
 
-.ballot-two {
-   /* bottom: 0.90em; */
-   /* top: 0.60em; */
-   /* vertical-align: bottom; */
-}
 
-#auto {
+.auto {
   background: rgba(217, 128, 140, 0.3) ;
   background-repeat: no-repeat;
   background-size: 100% 90%;
@@ -565,7 +553,16 @@ h1 {
   padding-right: 2px;
 }
 
-#demo {
+.demo {
+  background: rgba(34, 171, 130, 0.3);
+  background-repeat: no-repeat;
+  background-size: 100% 90%;
+  background-position: 0 100%;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+.hyb {
   background: rgba(112, 153, 250, 0.3);
   background-repeat: no-repeat;
   background-size: 100% 90%;
@@ -574,14 +571,32 @@ h1 {
   padding-right: 2px;
 }
 
-/* .hyb {
-  background: rgba(34, 171, 130, 0.4);
+#postponedGray {
+  background: rgba(137, 132, 138, 0.3);
   background-repeat: no-repeat;
   background-size: 100% 90%;
   background-position: 0 100%;
   padding-left: 2px;
   padding-right: 2px;
-}  */
+}
+
+#africa {
+  background: #22ab828a;
+  background-repeat: no-repeat;
+  background-size: 100% 90%;
+  background-position: 0 100%;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+.postponed {
+  background: rgb(112, 153, 250, 0.4);
+  background-repeat: no-repeat;
+  background-size: 100% 90%;
+  background-position: 0 100%;
+  padding-left: 2px;
+  padding-right: 2px;
+}
 
 a {
  color: rgb(97, 94, 92)

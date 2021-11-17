@@ -3,7 +3,6 @@
   import { onMount, afterUpdate, beforeUpdate } from 'svelte/internal';
   import { fade } from 'svelte/transition';
   import  { _ } from 'lodash';
-  import rough from 'roughjs/bundled/rough.cjs';
 
   export let data;
   export let cancelledBallots;
@@ -42,9 +41,6 @@
   .style("z-index", "11")
 
 
-
-
-
 const backgroundColor = "#f0e8e5";
 // import testing from "./../public/data/test.js";
 // import dataLines from "./../public/data/dataLines.js";
@@ -55,7 +51,7 @@ $: if (width < 550 && legend === 'no') {
 } else if (width < 920 && legend === 'yes') {
   margin = { top:20, right:30, bottom:30, left:110 };
 } else {
-  margin = { top:20, right:100, bottom:30, left:marginLeft };
+  margin = { top:20, right:130, bottom:30, left:marginLeft };
 }
 
 let marginDem;
@@ -72,7 +68,7 @@ $: height = width/2;
 $: alldates = extent(constData, d => d.heldMonthYearDate);
 
 $: months = monthsRaw.map(date => timeParse("%B %Y")(date));
-const monthsSmall = ["March 2020","December 2020","June 2021"];
+const monthsSmall = ["March 2020","December 2020","September 2021"];
 const monthsSmallDates = monthsSmall.map(date => timeParse("%B %Y")(date))
 
 $: xScaleTicks = scaleTime()
@@ -179,6 +175,9 @@ return {
 };
 });
 
+
+$: console.log(cancelledBallots, cancelledBallotsData)
+
 $: dataPostponedDates = dataPostponedBallots.map(d => {
 return {
   d: d.d,
@@ -259,36 +258,65 @@ $: dataRegime2 = cancelledBallotsData.filter(d => d.country === 'Armenia' || d.c
 //   })
 
 
-$: svg = select('svg');
-$: ballots = svg.selectAll('.animate')
-      .data(dataHeldCalc)
-
+// $: svg = select('svg');
 
 
     afterUpdate(() => {
-    svg = select('svg')
-    // ballots = svg.selectAll('.animate')
-    //   .data(dataHeldCalc)
+    let svg = select('svg')
+    let ballots  = svg.selectAll('.animate')
+      .data(dataHeldCalc)
 
-      console.log("updated")
+    let ballotsPost = svg.selectAll('.rectPost')
+      .data(dataPostponedCalc)
 
-  //   ballots.on("mouseover", (event, d) => {
-  //       const current = event.currentTarget;
-  //       console.log(current)
-  //       tooltip
-  //         .style("visibility", "visible")
-  //         .style("top", (d[whichY]) +"px")
-  //         .style("left", (d[whichX]) + "px")
-  //         .html(
-  //           `<div>${d.country}</div>`
-  //         )
-  // })
+    let ballotsCancelled = svg.selectAll('.rectCancelled')
+      .data(cancelledBallotsData)
 
-  //     ballots.on("mouseout", (event,d) => {
-  //       tooltip.style("visibility", "hidden")
-  // })
+         ballots.on("mouseenter", (event, d) => {
+        tooltip
+          .style("visibility", "visible")
+          .style("left", event.pageX + "px")
+          .style("top", event.pageY + "px")
+          .html(
+            `<div>${d.country}</div>`
+          )
+          })
 
-    //  console.log(current, "updated")
+          ballots.on("mouseout", (event, d) => {
+        tooltip
+          .style("visibility", "hidden")
+          })
+
+          ballotsPost.on("mouseenter", (event, d) => {
+        tooltip
+          .style("visibility", "visible")
+          .style("left", event.pageX + "px")
+          .style("top", event.pageY + "px")
+          .html(
+            `<div>${d.country}</div>`
+          )
+          })
+
+          ballotsPost.on("mouseout", (event, d) => {
+        tooltip
+          .style("visibility", "hidden")
+          })
+
+            ballotsCancelled.on("mouseenter", (event, d) => {
+        tooltip
+          .style("visibility", "visible")
+          .style("left", event.pageX + "px")
+          .style("top", event.pageY + "px")
+          .html(
+            `<div>${d.country}</div>`
+          )
+        })
+
+          ballotsCancelled.on("mouseout", (event, d) => {
+        tooltip
+          .style("visibility", "hidden")
+          })
+
   })
 
 // $: ballots.on("mouseover", (event, d) => {
@@ -303,33 +331,60 @@ $: ballots = svg.selectAll('.animate')
 //           )
 //   })
 
-function handleMousemove() {
-   ballots.on("mouseenter", (event, d) => {
-        const current = event.currentTarget;
-        console.log(current)
-        tooltip
-          .style("visibility", "visible")
-          .style("left", event.pageX + "px")
-          .style("top", event.pageY + "px")
-          .html(
-            `<div>${d.country}</div>`
-          )
-  })
-}
+// function handleMousemove() {
+//    ballots.on("mouseenter", (event, d) => {
+//         tooltip
+//           .style("visibility", "visible")
+//           .style("left", event.pageX + "px")
+//           .style("top", event.pageY + "px")
+//           .html(
+//             `<div>${d.country}</div>`
+//           )
+//   })
+
+//   // ballotsPost.on("mouseenter", (event, d) => {
+//   //       tooltip
+//   //         .style("visibility", "visible")
+//   //         .style("left", event.pageX + "px")
+//   //         .style("top", event.pageY + "px")
+//   //         .html(
+//   //           `<div>${d.country}</div>`
+//   //         )
+//   // })
+
+//   //   ballotsCancelled.on("mouseenter", (event, d) => {
+//   //       tooltip
+//   //         .style("visibility", "visible")
+//   //         .style("left", event.pageX + "px")
+//   //         .style("top", event.pageY + "px")
+//   //         .html(
+//   //           `<div>${d.country}</div>`
+//   //         )
+//   // })
+// }
+
 
 function handleMouseleave() {
     ballots.on("mouseout", (event,d) => {
     tooltip.style("visibility", "hidden")
   })
+
+  //   ballotsPost.on("mouseout", (event,d) => {
+  //   tooltip.style("visibility", "hidden")
+  // })
+
+  //   ballotsCancelled.on("mouseout", (event,d) => {
+  //   tooltip.style("visibility", "hidden")
+  // })
 }
 
 
-  $:console.log(width, ballots)
+  // $:console.log(width, ballots)
 
 </script>
 
 <!-- <svg width={width} height={height} id="svg"   on:mouseenter={handleMousemove}> -->
-<svg width={width} height={height} id="svg" on:mouseenter={handleMousemove} on:mouseleave={handleMouseleave}>
+<svg width={width} height={height} id="svg" >
 
   {#if width > 920}
     {#each dataHeldCalc as d}
@@ -411,6 +466,7 @@ function handleMouseleave() {
           opacity={d[opacityValue]}
           ></circle>
           <rect
+              class="rectPost"
               x={3}
               y={5}
               width="18"
@@ -486,6 +542,7 @@ function handleMouseleave() {
           stroke-width='2'
           ></circle>
           <rect
+          class="rectCancelled"
           x="3"
           y="5"
           width="18"

@@ -19,7 +19,7 @@ $: if (width < 920) {
   const continents = ["Europe","Middle East","Africa","Americas","Asia-Pacific"];
   const regimes = ["democracy","unclassified","authoritarian regime","hybrid regime"];
   const backgroundColor = "#f0e8e5";
-  const xTicksTurnout = [20,30, 40, 50, 60, 70, 80, 90, 100];
+  const xTicksTurnout = [0,10,30, 40, 50, 60, 70, 80, 90, 100];
 
   // $: medianTurnout = mean(data, d => d.turnout_reg_votes);
   // $: medianTurnoutDiff = mean(data, d => d.turnoutDiff);
@@ -31,7 +31,7 @@ $: if (width < 920) {
 
   $: xScaleTurnout = scaleLinear()
   // .domain(extent(data, d => d.turnout_reg_votes))
-  .domain([20,100])
+  .domain([0,100])
   .range([margin.left, width - margin.right])
 
   $: xScaleTurnoutDiff = scaleLinear()
@@ -64,7 +64,7 @@ $: if (width < 920) {
     simulation.tick()
   })
 
-  $: medianTurnout = xScaleTurnout(62);
+  $: medianTurnout = xScaleTurnout(59);
   $: medianTurnoutDiff = xScaleTurnoutDiff(-2);
 
 // $: console.log( data, dataCalc)
@@ -211,7 +211,7 @@ $: if (width < 920) {
   font-size: 0.9rem;
 }
 
-.chart-title {
+/* .chart-title {
   font-size: 1.2rem;
   font-weight: bold;
   fill: rgb(66, 66, 66);
@@ -221,7 +221,7 @@ $: if (width < 920) {
 .chart-title-small {
   font-size: 1rem;
   fill: rgb(66, 66, 66);
-}
+} */
 
 
 .source {

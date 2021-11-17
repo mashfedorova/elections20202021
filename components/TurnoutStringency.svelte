@@ -1,9 +1,10 @@
 <script>
-  import { scaleLinear, extent, line } from 'd3';
+  import { scaleLinear, extent, line, select} from 'd3';
   import { regressionLinear} from 'd3-regression'
   import { fade } from 'svelte/transition';
   import { interpolatePath } from "d3-interpolate-path";
   import { tweened } from "svelte/motion";
+  import { afterUpdate } from 'svelte/internal';
   import  {_} from 'lodash';
   import dataRaw from '../public/data/dataFinal9';
   // export let data;
@@ -17,6 +18,24 @@
   export let turnoutLabel = 'turnout';
   export let rectTurnoutStringency = '';
   export let regionsHighlight = '';
+
+    const tooltip = select("body").append("div")
+  .attr("class", "tooltip")
+  .style("text-align", "center")
+  .style("display", "block")
+  .style("position", "absolute")
+  .style("visibility", "hidden")
+  .style("font-size", "1rem")
+  .style('font-family', 'Montaga')
+  .style("background", "rgba(255,255,255,0.9)")
+  .style("padding", "0.1rem 0.5rem")
+  .style("color", "grey")
+  .style("border-radius", "5px")
+  .style("border", "1px solid grey")
+  // .style("transform", "translate(-30%, -50%)")
+  .style("pointer-events", "none")
+  // .style("cursor", "pointer")
+  .style("z-index", "11")
 
 
   const data = _.chain(dataRaw.filter(d => d.turnout_reg_votes && d.stringency_index))
@@ -146,9 +165,39 @@
 
   $: horizLinePathData.set(horizLinePath(horisontalLineData))
 
+///////////////////////////////////////
+
+  // $: svg = select('svg');
+
+
+    afterUpdate(() => {
+    let svg = select('#stringencySvg')
+    let ballots  = svg.selectAll('.animate')
+      .data(dataCalc)
+
+    // let ballotsAfr  = svg.selectAll('.africaRect')
+    //   .data(dataCalc)
+
+         ballots.on("mouseenter", (event, d) => {
+        tooltip
+          .style("visibility", "visible")
+          .style("left", event.pageX + "px")
+          .style("top", event.pageY + "px")
+          .html(
+            `<div>${d.country}</div>`
+          )
+          })
+
+          ballots.on("mouseout", (event, d) => {
+        tooltip
+          .style("visibility", "hidden")
+          })
+  })
+
+
 
 </script>
-<svg width={width} height={height}>
+<svg id="stringencySvg" width={width} height={height}>
   {#if width > 613}
   {#each dataCalc as d}
     <g
@@ -156,7 +205,7 @@
     transform="translate({d.x}, {d.yScaled})"
     style="--x: {d.x}px; --y: {d.yScaled}px;"
     >
-    <g transform="scale(0.7)">
+    <g transform="scale(0.7)" class="test">
       <path
       d={d.d}
       stroke='#000'
@@ -186,6 +235,7 @@
   {:else}
     {#each dataCalc as d}
       <rect
+      class="africaRect"
       x='{d.x}'
       y='{d.yScaled}'
       width='7'
