@@ -175,9 +175,6 @@ return {
 };
 });
 
-
-$: console.log(cancelledBallots, cancelledBallotsData)
-
 $: dataPostponedDates = dataPostponedBallots.map(d => {
 return {
   d: d.d,
@@ -377,9 +374,6 @@ function handleMouseleave() {
   //   tooltip.style("visibility", "hidden")
   // })
 }
-
-
-  // $:console.log(width, ballots)
 
 </script>
 

@@ -1,11 +1,30 @@
 <script>
-  import { scaleLinear, extent, scaleOrdinal, map } from 'd3';
+  import { select, scaleOrdinal, map } from 'd3';
+  import { afterUpdate } from 'svelte/internal';
   import  {_} from 'lodash';
 
   export let width;
   export let data;
 
   const backgroundColor = "#f0e8e5";
+
+  const tooltip = select("body").append("div")
+  .attr("class", "tooltip")
+  .style("text-align", "center")
+  .style("display", "block")
+  .style("position", "absolute")
+  .style("visibility", "hidden")
+  .style("font-size", "1rem")
+  .style('font-family', 'Montaga')
+  .style("background", "rgba(255,255,255,0.9)")
+  .style("padding", "0.1rem 0.5rem")
+  .style("color", "grey")
+  .style("border-radius", "5px")
+  .style("border", "1px solid grey")
+  // .style("transform", "translate(-30%, -50%)")
+  .style("pointer-events", "none")
+  // .style("cursor", "pointer")
+  .style("z-index", "11")
 
   let height
   $: if (width < 600) {
@@ -28,10 +47,67 @@
   .domain(map(data, d => d.incumbentWon))
   .range(["#709afa", "#dbbd84", "#949494"]);
 
+   afterUpdate(() => {
+    let svg = select('#incumbentsSvg')
+    let ballotsDem  = svg.selectAll('.democ')
+      .data(democracies)
+    let ballotsAut  = svg.selectAll('.autocr')
+      .data(autocracies)
+    let ballotsHyb = svg.selectAll('.hybrids')
+      .data(hybrids)
+
+         ballotsDem.on("mouseenter", (event, d) => {
+        tooltip
+          .style("visibility", "visible")
+          .style("left", event.pageX + "px")
+          .style("top", event.pageY + "px")
+          .html(
+            `<div>${d.country}</div>`
+          )
+          })
+
+          ballotsDem.on("mouseout", (event, d) => {
+        tooltip
+          .style("visibility", "hidden")
+          })
+
+         ballotsAut.on("mouseenter", (event, d) => {
+        tooltip
+          .style("visibility", "visible")
+          .style("left", event.pageX + "px")
+          .style("top", event.pageY + "px")
+          .html(
+            `<div>${d.country}</div>`
+          )
+          })
+
+          ballotsAut.on("mouseout", (event, d) => {
+        tooltip
+          .style("visibility", "hidden")
+          })
+
+         ballotsHyb.on("mouseenter", (event, d) => {
+        tooltip
+          .style("visibility", "visible")
+          .style("left", event.pageX + "px")
+          .style("top", event.pageY + "px")
+          .html(
+            `<div>${d.country}</div>`
+          )
+          })
+
+          ballotsHyb.on("mouseout", (event, d) => {
+        tooltip
+          .style("visibility", "hidden")
+          })
+
+
+  })
+
 
 </script>
 
-<svg {width} {height}>
+<svg {width} {height} id="incumbentsSvg">
   <!-- <text class="regimes" x="100" y="70">democracies</text>
   <text class="regimes" x="450" y="70">athoritarian regimes</text>
   <text class="regimes" x="800" y="70">hybrid regimes</text> -->
@@ -71,6 +147,7 @@
         >
         </circle>
         <rect
+        class="democ"
         x="3"
         y="5"
         width="18"
@@ -107,13 +184,15 @@
         stroke-width='2'
         ></circle>
         <rect
+        class="hybrids"
         x="3"
         y="5"
         width="18"
         height="23"
         fill="{colorScale(d.incumbentWon)}"
         opacity="0.8"
-        filter='url(#highlight)'>
+        filter='url(#highlight)'
+        >
         </rect>
       </g>
 </g>
@@ -143,6 +222,7 @@
         stroke-width='2'
         ></circle>
         <rect
+        class="autocr"
         x="3"
         y="5"
         width="18"

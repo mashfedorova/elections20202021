@@ -41,7 +41,7 @@ $: if (width < 920) {
 
   $: colorScale = scaleOrdinal()
   .domain(regimes)
-  .range(['#99afe0', 'none', '#cf7480', 'none'])
+  .range(['#46b392', 'none', '#cf7480', 'none'])
 
   $: dataCalc = data.map(d => {
     return {
@@ -72,6 +72,9 @@ $: if (width < 920) {
 </script>
 
 <svg width={width} height={height}>
+  {#each dataCalc as d}
+    <rect width='7' height='8' x={d.x} y={d.y}  fill={d.color} stroke='#191919' stroke-width={d.mandatoryVoting ? '2' : '1'}></rect>
+  {/each}
   {#if width > 920 && xTicks === 'turnout'}
     <!-- <text  class="chart-title"x={margin.left-40} y={margin.top}>Voter turnout in </text>
     <text  class="chart-title"x={margin.left+90} y={margin.top}>democracies, </text>
@@ -98,21 +101,28 @@ $: if (width < 920) {
   <text  class="country-labels" x={xScaleTurnout(17)} y={(height/2)+65}>Critics called for boycott of the vote</text>
   <text  class="country-labels" x={xScaleTurnout(17)} y={(height/2)+80}>seen as a lacking in substance.</text>
   <line  x1={xScaleTurnout(23.3)} x2={xScaleTurnout(23.3)} y1={(height/2+12)} y2={(height/2+20)} stroke='#525252'></line>
-  <text  class="country-labels" x={xScaleTurnout(50)} y={(height/2)+35}>Mexico formally requires</text>
-  <text  class="country-labels" x={xScaleTurnout(50)} y={(height/2)+50}>voting, but imposes</text>
-  <text  class="country-labels" x={xScaleTurnout(50)} y={(height/2)+65}>no formal sanctions.</text>
-  <line  x1={xScaleTurnout(53.3)} x2={xScaleTurnout(53.3)} y1={(height/2+12)} y2={(height/2+20)} stroke='#525252'></line>
+  <text  class="country-labels" x={xScaleTurnout(50)} y={(height/2)+40}>Mexico formally requires</text>
+  <text  class="country-labels" x={xScaleTurnout(50)} y={(height/2)+55}>voting, but imposes</text>
+  <text  class="country-labels" x={xScaleTurnout(50)} y={(height/2)+70}>no formal sanctions.</text>
+  <line  x1={xScaleTurnout(53.3)} x2={xScaleTurnout(53.3)} y1={(height/2+12)} y2={(height/2+25)} stroke='#525252'></line>
+  <text  class="country-labels" x={xScaleTurnout(5)} y={(height/2)-25}>Referendum in</text>
+  <text  class="country-labels" x={xScaleTurnout(5)} y={(height/2)-12}>Mexico</text>
+  <line  x1={xScaleTurnout(7.5)} x2={xScaleTurnout(7.5)} y1={(height/2-3)} y2={(height/2-9)} stroke='#525252'></line>
 
-  <line x1='{medianTurnout+3}' x2='{medianTurnout+3}' y1='{height/2-10}' y2='{height/2+20}' stroke='#525252' stroke-linecap="round"  stroke-dasharray="4" stroke-width='2'></line>
+
+  <line x1='{medianTurnout+3}' x2='{medianTurnout+3}' y1='{height/2-10}' y2='{height/2+20}' stroke='#525252' stroke-linecap="round" stroke-width='3'></line>
 
   <g transform="translate({medianTurnout-7},45)">
     <path d="M10,93 L10,90 C10,75 20,70 30,70 L 37,70" fill="none" stroke="#525252"></path>
   </g>
-  <text  class="country-labels" x={xScaleTurnout(65.5)} y="119">median</text>
+  <text  class="country-labels" x={xScaleTurnout(64)} y="119">median</text>
+
+  <rect width='7' height='8' x='68%' y='10%' fill='{backgroundColor}' stroke='#191919' stroke-width='1'></rect>
+  <text  class="country-labels" x='69.5%' y='13%'>One rectangle represents one election</text>
+  <rect width='7' height='8' x='68%' y='15%' fill='{backgroundColor}' stroke='#191919' stroke-width='2'></rect>
+  <text  class="country-labels" x='69.5%' y='18%'>Compulsory voting</text>
    {/if}
-   {#each dataCalc as d}
-    <rect width='7' height='8' x={d.x} y={d.y}  fill={d.color} stroke='#191919' stroke-width={d.mandatoryVoting ? '2' : '1'}></rect>
-  {/each}
+
 
   {#if width > 920 && xTicks === 'difference'}
   <g>
@@ -121,8 +131,8 @@ $: if (width < 920) {
       <text x="0" y="0" fill='#000' opacity='0.7' fade:in>{tick}</text>
     </g>
   {/each}
-    <text  class="country-labels" x={xScaleTurnoutDiff(16.5)} y={(height/2)-12}>CAR</text>
-    <text  class="country-labels" x={xScaleTurnoutDiff(14)} y={(height/2)-12}>Burundi</text>
+    <text  class="country-labels" x={xScaleTurnoutDiff(16.8)} y={(height/2)-12}>CAR</text>
+    <text  class="country-labels" x={xScaleTurnoutDiff(13.5)} y={(height/2)-12}>Burundi</text>
     <text  class="country-labels" x={xScaleTurnoutDiff(11)} y={(height/2)+35}>In Poland's</text>
     <text  class="country-labels" x={xScaleTurnoutDiff(11)} y={(height/2)+50}>presendential election</text>
     <text  class="country-labels" x={xScaleTurnoutDiff(11)} y={(height/2)+65}>turnout was the</text>
@@ -140,12 +150,8 @@ $: if (width < 920) {
     <line  x1={xScaleTurnoutDiff(-13.3)} x2={xScaleTurnoutDiff(-13.3)} y1={(height/2-5)} y2={(height/2-17)} stroke='#525252'></line>
   </g>
 
-  <line x1='{medianTurnoutDiff+3}' x2='{medianTurnoutDiff+3}' y1='{height/2-15}' y2='{height/2+25}' stroke='#525252' stroke-linecap="round" stroke-dasharray="4" stroke-width='3'></line>
+  <line x1='{medianTurnoutDiff+3}' x2='{medianTurnoutDiff+3}' y1='{height/2-15}' y2='{height/2+25}' stroke='#525252' stroke-linecap="round" stroke-width='3'></line>
 
-  <rect width='7' height='8' x='68%' y='10%' fill='{backgroundColor}' stroke='#191919' stroke-width='1'></rect>
-  <text  class="country-labels" x='69.5%' y='13%'>One rectangle represents one election</text>
-  <rect width='7' height='8' x='68%' y='15%' fill='{backgroundColor}' stroke='#191919' stroke-width='2'></rect>
-  <text  class="country-labels" x='69.5%' y='18%'>Compulsory voting</text>
   {/if}
 
   {#if width < 920 && width > 500 && xTicks === 'difference'}
@@ -181,7 +187,7 @@ $: if (width < 920) {
   {/each}
   {/if}
 
-  {#if width>500 && xTicks === 'turnout'}
+  {#if width>500}
   <text  class="source" x={margin.left} y={height - (margin.bottom/2)}>Source: International IDEA Voter Turnout <a href="https://www.idea.int/data-tools/data/voter-turnout" target="_blank">Database</a></text>
   <text  class="source" x={margin.left} y={height - (margin.bottom/4.5)}>Referendums were excluded</text>
   {/if}
