@@ -19,23 +19,23 @@
   export let rectTurnoutStringency = '';
   export let regionsHighlight = '';
 
-    const tooltip = select("body").append("div")
+  const backgroundColor = "#f0e8e5";
+
+  const tooltip = select("body").append("div")
   .attr("class", "tooltip")
   .style("text-align", "center")
   .style("display", "block")
   .style("position", "absolute")
   .style("visibility", "hidden")
   .style("font-size", "1rem")
-  .style('font-family', 'Montaga')
-  .style("background", "rgba(255,255,255,0.9)")
+  .style("background", backgroundColor)
   .style("padding", "0.1rem 0.5rem")
   .style("color", "grey")
-  .style("border-radius", "5px")
-  .style("border", "1px solid grey")
-  // .style("transform", "translate(-30%, -50%)")
+  .style("border-radius", "1px")
+  .style("border", "1px solid #000")
   .style("pointer-events", "none")
-  // .style("cursor", "pointer")
   .style("z-index", "11")
+
 
 
   const data = _.chain(dataRaw.filter(d => d.turnout_reg_votes && d.stringency_index))
@@ -60,7 +60,6 @@
 
   const margin = { top:30, right:20, bottom:100, left:20 };
 
-  const backgroundColor = "#f0e8e5";
 
   $: widthUpdated = width/2;
   $: height = width;

@@ -22,6 +22,8 @@
   export let highlightLines;
   export let width;
 
+  const backgroundColor = "#f0e8e5";
+
   const tooltip = select("body").append("div")
   .attr("class", "tooltip")
   .style("text-align", "center")
@@ -29,19 +31,15 @@
   .style("position", "absolute")
   .style("visibility", "hidden")
   .style("font-size", "1rem")
-  .style('font-family', 'Montaga')
-  .style("background", "rgba(255,255,255,0.9)")
+  .style("background", backgroundColor)
   .style("padding", "0.1rem 0.5rem")
   .style("color", "grey")
-  .style("border-radius", "5px")
-  .style("border", "1px solid grey")
-  // .style("transform", "translate(-30%, -50%)")
+  .style("border-radius", "1px")
+  .style("border", "1px solid #000")
   .style("pointer-events", "none")
-  // .style("cursor", "pointer")
   .style("z-index", "11")
 
 
-const backgroundColor = "#f0e8e5";
 // import testing from "./../public/data/test.js";
 // import dataLines from "./../public/data/dataLines.js";
 
@@ -80,7 +78,7 @@ $: xScale = scaleTime()
   .range([margin.left, width-margin.right ])
 
 $: yScale = scaleLinear()
-  .domain([0, max(data, d => d.position)])
+  .domain([0, 13])
   .range([height-margin.bottom, margin.top])
 
 $: xScaleDem = scaleLinear()
@@ -154,7 +152,8 @@ return {
   opacityLines: highlightLines === 'no' ? '1' : d.country === 'Ethiopia' ? '1' : '0.3',
   opFadeout: '0.2',
   country: d.country,
-  demIndexCat: d.demIndexCat
+  demIndexCat: d.demIndexCat,
+  yPostOrigin: yScale(d.positionOriginalDate),
 
 };
 });
@@ -384,7 +383,8 @@ function handleMouseleave() {
     {#each dataHeldCalc as d}
   <g class="animate"
   transform="translate({d[whichX]}, {d[whichY]})"
-  in:fade="{{delay: d[whichX]*2}}"
+  in:fade="{{delay: d[whichX]*1.5}}"
+  out:fade
   style="--x: {d[whichX]}px; --y: {d[whichY]}px;"
   >
     <path
@@ -433,7 +433,7 @@ function handleMouseleave() {
   {#each dataPostponedCalc as d}
       <g class="animate"
       transform="translate({d[whichX]}, {d[whichY]})"
-      in:fade="{{delay: d[whichX]*2}}"
+      in:fade="{{delay: d[whichX]*1.3}}"
       style="--x: {d[whichX]}px; --y: {d[whichY]}px;"
       >
         <path

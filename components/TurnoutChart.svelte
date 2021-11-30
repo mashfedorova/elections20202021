@@ -75,7 +75,7 @@ $: if (width < 920) {
   {#each dataCalc as d}
     <rect width='7' height='8' x={d.x} y={d.y}  fill={d.color} stroke='#191919' stroke-width={d.mandatoryVoting ? '2' : '1'}></rect>
   {/each}
-  {#if width > 920 && xTicks === 'turnout'}
+  {#if width > 1100 && xTicks === 'turnout'}
     <!-- <text  class="chart-title"x={margin.left-40} y={margin.top}>Voter turnout in </text>
     <text  class="chart-title"x={margin.left+90} y={margin.top}>democracies, </text>
     <text  class="chart-title"x={margin.left+200} y={margin.top}>authoritarian regimes</text>
@@ -91,20 +91,20 @@ $: if (width < 920) {
   <line  x1={xScaleTurnout(98.4)} x2={xScaleTurnout(98.4)} y1={(height/2+12)} y2={(height/2+20)} stroke='#525252'></line>
   <text  class="country-labels" x={xScaleTurnout(91)} y={(height/2)-12}>Singapore</text>
   <line  x1={xScaleTurnout(96)} x2={xScaleTurnout(95)} y1={(height/2-3)} y2={(height/2-9)} stroke='#525252'></line>
-  <text  class="country-labels" x={xScaleTurnout(24)} y={(height/2)-70}>Egypt had low turnout</text>
-  <text  class="country-labels" x={xScaleTurnout(24)} y={(height/2)-55}>in parlamentary elections</text>
-  <text  class="country-labels" x={xScaleTurnout(24)} y={(height/2)-40}>despite government's efforts</text>
+  <text  class="country-labels" x={xScaleTurnout(24)} y={(height/2)-70}>Egypt had a low turnout</text>
+  <text  class="country-labels" x={xScaleTurnout(24)} y={(height/2)-55}>in parliamentary elections</text>
+  <text  class="country-labels" x={xScaleTurnout(24)} y={(height/2)-40}>despite  the government's efforts</text>
   <text  class="country-labels" x={xScaleTurnout(24)} y={(height/2)-25}>to bring voters to the polls.</text>
   <line  x1={xScaleTurnout(29.3)} x2={xScaleTurnout(29.3)} y1={(height/2)-20} y2={(height/2-5)} stroke='#525252'></line>
   <text  class="country-labels" x={xScaleTurnout(17)} y={(height/2)+35}>Algeria held a referendum</text>
   <text  class="country-labels" x={xScaleTurnout(17)} y={(height/2)+50}>proposing a revised constitution.</text>
-  <text  class="country-labels" x={xScaleTurnout(17)} y={(height/2)+65}>Critics called for boycott of the vote</text>
-  <text  class="country-labels" x={xScaleTurnout(17)} y={(height/2)+80}>seen as a lacking in substance.</text>
+  <text  class="country-labels" x={xScaleTurnout(17)} y={(height/2)+65}>Critics called for a boycott of the vote</text>
+  <text  class="country-labels" x={xScaleTurnout(17)} y={(height/2)+80}>seen as lacking in substance.</text>
   <line  x1={xScaleTurnout(23.3)} x2={xScaleTurnout(23.3)} y1={(height/2+12)} y2={(height/2+20)} stroke='#525252'></line>
   <text  class="country-labels" x={xScaleTurnout(50)} y={(height/2)+40}>Mexico formally requires</text>
   <text  class="country-labels" x={xScaleTurnout(50)} y={(height/2)+55}>voting, but imposes</text>
   <text  class="country-labels" x={xScaleTurnout(50)} y={(height/2)+70}>no formal sanctions.</text>
-  <line  x1={xScaleTurnout(53.3)} x2={xScaleTurnout(53.3)} y1={(height/2+12)} y2={(height/2+25)} stroke='#525252'></line>
+  <line  x1={xScaleTurnout(54.5)} x2={xScaleTurnout(54.5)} y1={(height/2+15)} y2={(height/2+25)} stroke='#525252'></line>
   <text  class="country-labels" x={xScaleTurnout(5)} y={(height/2)-25}>Referendum in</text>
   <text  class="country-labels" x={xScaleTurnout(5)} y={(height/2)-12}>Mexico</text>
   <line  x1={xScaleTurnout(7.5)} x2={xScaleTurnout(7.5)} y1={(height/2-3)} y2={(height/2-9)} stroke='#525252'></line>
@@ -124,7 +124,7 @@ $: if (width < 920) {
    {/if}
 
 
-  {#if width > 920 && xTicks === 'difference'}
+  {#if width > 1100 && xTicks === 'difference'}
   <g>
     {#each xTicksTurnoutDiff as tick}
     <g class="tick" transform="translate({xScaleTurnoutDiff(tick)}, {height-margin.bottom})">

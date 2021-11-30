@@ -15,22 +15,19 @@
   .style("position", "absolute")
   .style("visibility", "hidden")
   .style("font-size", "1rem")
-  .style('font-family', 'Montaga')
-  .style("background", "rgba(255,255,255,0.9)")
+  .style("background", backgroundColor)
   .style("padding", "0.1rem 0.5rem")
   .style("color", "grey")
-  .style("border-radius", "5px")
-  .style("border", "1px solid grey")
-  // .style("transform", "translate(-30%, -50%)")
+  .style("border-radius", "1px")
+  .style("border", "1px solid #000")
   .style("pointer-events", "none")
-  // .style("cursor", "pointer")
   .style("z-index", "11")
 
   let height
   $: if (width < 600) {
     height = width;
   } else {
-    height = width/2;
+    height = 350
   }
 
   $: democracies = data.filter(d => d.demIndexCat === 'democracy');
@@ -44,8 +41,8 @@
   //   .value();
 
   $: colorScale = scaleOrdinal()
-  .domain(map(data, d => d.incumbentWon))
-  .range(["#709afa", "#dbbd84", "#949494"]);
+  .domain(["yes", "no", "both", "doesnt apply"])
+  .range(["#709afa", "#dbbd84", "url(#svgGradient)", "#949494"]);
 
    afterUpdate(() => {
     let svg = select('#incumbentsSvg')
@@ -55,6 +52,7 @@
       .data(autocracies)
     let ballotsHyb = svg.selectAll('.hybrids')
       .data(hybrids)
+
 
          ballotsDem.on("mouseenter", (event, d) => {
         tooltip
@@ -113,6 +111,9 @@
   <text class="regimes" x="800" y="70">hybrid regimes</text> -->
 
   {#if width > 1119}
+  <g transform="translate(100,40)">
+    <text class="title" x="0" y="0">Elections where incumbents won or lost, by regime type</text>
+  </g>
     <g transform="translate(100,100)">
       <text class="regimes" x="0" y="-10">democracies</text>
     </g>
@@ -154,7 +155,8 @@
         height="23"
         fill="{colorScale(d.incumbentWon)}"
         opacity="0.8"
-        filter='url(#highlight)'>
+        filter='url(#highlight)'
+        >
         </rect>
       </g>
 </g>
@@ -239,10 +241,10 @@
   <g transform="translate(300,50)">
     <text class="regimes" x="0" y="-10">democracies</text>
   </g>
-    <g transform="translate(300,190)">
+    <g transform="translate(300,230)">
       <text class="regimes" x="0" y="-10">hybrid regimes</text>
     </g>
-    <g transform="translate(300,300)">
+    <g transform="translate(300,340)">
       <text class="regimes" x="0" y="-10">athoritarian regimes</text>
     </g>
    {#each democracies as d, i}
@@ -283,7 +285,7 @@
   {/each}
 
     {#each hybrids as d, i}
-    <g transform="translate(300,190)">
+    <g transform="translate(300,230)">
       <g transform="translate({(i % 10) * 28},{Math.floor(i / 10) * 35}) scale(0.8)">
         <path
         d={d.d}
@@ -319,7 +321,7 @@
   {/each}
 
     {#each autocracies as d, i}
-    <g transform="translate(300,300)">
+    <g transform="translate(300,340)">
       <g transform="translate({(i % 10) * 28},{Math.floor(i / 10) * 35}) scale(0.8)">
         <path
         d={d.d}
@@ -428,10 +430,22 @@
       <feGaussianBlur stdDeviation="7 7"/>
     </filter>
   </defs>
+
+  <defs>
+    <linearGradient id="svgGradient">
+      <stop offset="20%" stop-color="#709afa" />
+      <stop offset="80%" stop-color="#dbbd84" />
+    </linearGradient>
+  </defs>
 </svg>
 
 <style>
   .regimes {
     letter-spacing: 0.2em;
+  }
+  .title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    fill: rgb(66, 66, 66);
   }
 </style>
