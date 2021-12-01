@@ -533,6 +533,7 @@ h1 {
 
 .small {
   font-size: 0.9rem;
+  padding-bottom: 50px;
 }
 
 #intro-chart {
