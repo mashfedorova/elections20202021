@@ -480,7 +480,7 @@ onMount(() => {
   </section>
   <section class="textblocks">
     <h3> Thanks</h3>
-    <p class="para small"> Special thanks to the invaluable comments of the members of Information Design and Elevate Groups!</p>
+    <p class="para small small-last"> Special thanks to the invaluable comments of the members of Information Design and Elevate Groups!</p>
   </section>
 <style>
 
@@ -533,7 +533,10 @@ h1 {
 
 .small {
   font-size: 0.9rem;
-  padding-bottom: 50px;
+}
+
+.small-last {
+    padding-bottom: 50px;
 }
 
 #intro-chart {
