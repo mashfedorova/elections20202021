@@ -1,13 +1,11 @@
 <script>
-  import { forceSimulation, forceX, forceY, forceCollide, scaleLinear, scaleOrdinal, median, mean} from 'd3';
+  import { forceSimulation, forceX, forceY, forceCollide, scaleLinear, scaleOrdinal} from 'd3';
   import { _ } from 'lodash';
   export let data;
   export let width;
   export let x = 'turnout';
   export let xTicks;
 
-
-  // const margin= { top:25, right:200, bottom:40, left:200 };
 
 let margin;
 $: if (width < 920) {
@@ -20,10 +18,6 @@ $: if (width < 920) {
   const regimes = ["democracy","unclassified","authoritarian regime","hybrid regime"];
   const backgroundColor = "#f0e8e5";
   const xTicksTurnout = [0,10,30, 40, 50, 60, 70, 80, 90, 100];
-
-  // $: medianTurnout = mean(data, d => d.turnout_reg_votes);
-  // $: medianTurnoutDiff = mean(data, d => d.turnoutDiff);
-  // $: console.log(medianTurnout, medianTurnoutDiff)
 
   $: xTicksTurnoutDiff = [-25, -15, -5, 0, 5, 15];
 
@@ -41,7 +35,7 @@ $: if (width < 920) {
 
   $: colorScale = scaleOrdinal()
   .domain(regimes)
-  .range(['#46b392', 'none', '#cf7480', 'none'])
+  .range(["#cd5f8d",backgroundColor,"#7959d7",backgroundColor])
 
   $: dataCalc = data.map(d => {
     return {
@@ -67,8 +61,6 @@ $: if (width < 920) {
   $: medianTurnout = xScaleTurnout(59);
   $: medianTurnoutDiff = xScaleTurnoutDiff(-2);
 
-// $: console.log( data, dataCalc)
-
 </script>
 
 <svg width={width} height={height}>
@@ -76,10 +68,6 @@ $: if (width < 920) {
     <rect width='7' height='8' x={d.x} y={d.y}  fill={d.color} stroke='#191919' stroke-width={d.mandatoryVoting ? '2' : '1'}></rect>
   {/each}
   {#if width > 1100 && xTicks === 'turnout'}
-    <!-- <text  class="chart-title"x={margin.left-40} y={margin.top}>Voter turnout in </text>
-    <text  class="chart-title"x={margin.left+90} y={margin.top}>democracies, </text>
-    <text  class="chart-title"x={margin.left+200} y={margin.top}>authoritarian regimes</text>
-    <text  class="chart-title"x={margin.left+378} y={margin.top}>and hybrid regimes.</text> -->
     {#each xTicksTurnout as tick }
     <g class="tick" transform="translate({xScaleTurnout(tick)}, {height-margin.bottom})">
       <text x="0" y="0" fill='#000' opacity='0.7' fade:in>{tick}</text>
@@ -191,23 +179,7 @@ $: if (width < 920) {
   <text  class="source" x={margin.left} y={height - (margin.bottom/2)}>Source: International IDEA Voter Turnout <a href="https://www.idea.int/data-tools/data/voter-turnout" target="_blank">Database</a></text>
   <text  class="source" x={margin.left} y={height - (margin.bottom/4.5)}>Referendums were excluded</text>
   {/if}
-<!--
-  {#if width < 1220 && width > 700 && xTicks === 'difference'}
-    <text  class="chart-title-small" x="230" y="25">Difference in turnout in comparison to the previous election</text>
-  {/if}
 
-  {#if width < 699 && xTicks === 'difference'}
-    <text  class="chart-title-small" x="5" y="15">Difference in turnout in comparison to the previous election</text>
-  {/if}
-
-  {#if width > 1220 && xTicks === 'difference'}
-    <text  class="chart-title" x={margin.left-40} y={margin.top*2}>Difference in turnout in comparison to the previous election</text>
-
-  {/if} -->
-
-  <!-- {#if width > 1220 && xTicks === 'difference'}
-    <text  class="chart-title" x={margin.left-40} y={margin.top*2}>Difference in turnout in comparison to the previous election</text>
-  {/if} -->
 
 </svg>
 
@@ -216,19 +188,6 @@ $: if (width < 920) {
 .country-labels {
   font-size: 0.9rem;
 }
-
-/* .chart-title {
-  font-size: 1.2rem;
-  font-weight: bold;
-  fill: rgb(66, 66, 66);
-  font-weight: bold;
-}
-
-.chart-title-small {
-  font-size: 1rem;
-  fill: rgb(66, 66, 66);
-} */
-
 
 .source {
  color: rgb(97, 94, 92);

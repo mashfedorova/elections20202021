@@ -1,6 +1,6 @@
 <script>
-  import { scaleTime, scaleLinear, extent, max, timeFormat, timeParse, scaleBand, scaleOrdinal, map, select, selectAll, transition} from 'd3';
-  import { onMount, afterUpdate, beforeUpdate } from 'svelte/internal';
+  import { scaleTime, scaleLinear, extent, timeFormat, timeParse, scaleBand, scaleOrdinal, map, select} from 'd3';
+  import { afterUpdate } from 'svelte/internal';
   import { fade } from 'svelte/transition';
   import  { _ } from 'lodash';
 
@@ -40,9 +40,6 @@
   .style("z-index", "11")
 
 
-// import testing from "./../public/data/test.js";
-// import dataLines from "./../public/data/dataLines.js";
-
 let margin;
 $: if (width < 550 && legend === 'no') {
   margin = { top:5, right:20, bottom:30, left:5 };
@@ -60,8 +57,6 @@ $: if (width < 920) {
 }
 
 $: height = width/2;
-
-// $: console.log(width, margin, marginDem);
 
 $: alldates = extent(constData, d => d.heldMonthYearDate);
 
@@ -99,7 +94,10 @@ $: yScaleTextReg = scaleOrdinal()
 
 $: ScaleColorReg = scaleOrdinal()
 .domain(regimes)
-.range(['#d68993', '#709afa', '#22ab83', '#ccb693'])
+.range(["#cd5f8d",
+"#dea646",
+"#7959d7",
+"#5c5c5c"])
 
 $: yScalePostponed = scaleBand()
 .domain(map(dataRectsPostponed, d => d.country))
@@ -195,67 +193,6 @@ return {
 $: dataRegime1 = dataPostponedCalc.filter(d => d.country === 'Chile');
 $: dataRegime2 = cancelledBallotsData.filter(d => d.country === 'Armenia' || d.country === 'Chad' || d.country === 'Somalia');
 
-// $: console.log(dataHeldCalc)
-// const sel = select(this);
-// const svg = sel.append('svg').attr('class', 'control');
-// const rs = rough.svg(svg.node());
-// // const svg = select('#svg');
-// // const rc = rough.svg(svg.node())
-// // svg.appendChild(rc.circle(80, 120, 50));
-
-// console.log(sel)
-
-//   const svg = document.getElementById('svg');
-//   const rs = rough.svg(svg.node());
-
-
-// onMount(() => {
-//   const svg = document.getElementById('svg');
-//   const rc = rough.svg(svg);
-//   // svg.appendChild(rc.circle(80, 120, 50));
-
-//   // for (const x of dataPostponedDates) { console.log(x); }
-//   dataLines.forEach(d => {
-//       svg.appendChild(rc.line(d.xPost1, d.yPost, d.xHeld, d.yHeld, {strokeWidth: 5, stroke: 'lightblue'}));
-//       // console.log(d.xPost1, d.yPost, d.xPost1, d.yHeld)
-//       // svg.appendChild(rc.line(356.1636728366919 ,20 ,356.1636728366919,20));
-//       // svg.appendChild(rc.line(356 ,20 ,356,20));
-//   // svg.appendChild(rc.circle(80, 120, 50));
-//     })
-
-    //   <line
-    // in:fade="{{duration:100, delay: 500}}"
-    // x1={d.xPost1+23}
-    // x2={d.xHeld}
-    // y1={d.yPost+15}
-    // y2={d.yHeld+15}
-    // stroke={ScaleColorReg(d.reg)}
-    // stroke-width='5'
-    // stroke-opacity={highlightLines === 'no' ? d.opacityDiff : highlightLines === 'yes' && d.country === 'Ethiopia' ? d.opacityDiff : d.opacityLines }
-    // opacity={d[opacityValue]}
-    // ></line>
-  // })
-
-//  $:svg = select('svg')
-//  $: ballots = svg.selectAll('.animate')
-//  .data(dataHeldCalc)
-
-//   $: console.log(ballots)
-//   $: ballots.on("mouseover", (event, d) => {
-//         const current = event.currentTarget;
-//         console.log(current)
-//         tooltip
-//           .style("visibility", "visible")
-//           .style("top", (d[whichY]) +"px")
-//           .style("left", (d[whichX]) + "px")
-//           .html(
-//             `<div>${d.country}</div>`
-//           )
-//   })
-
-
-// $: svg = select('svg');
-
 
     afterUpdate(() => {
     let svg = select('svg')
@@ -315,68 +252,15 @@ $: dataRegime2 = cancelledBallotsData.filter(d => d.country === 'Armenia' || d.c
 
   })
 
-// $: ballots.on("mouseover", (event, d) => {
-//         const current = event.currentTarget;
-//         console.log(current)
-//         tooltip
-//           .style("visibility", "visible")
-//           .style("top", (d[whichY]) +"px")
-//           .style("left", (d[whichX]) + "px")
-//           .html(
-//             `<div>${d.country}</div>`
-//           )
-//   })
-
-// function handleMousemove() {
-//    ballots.on("mouseenter", (event, d) => {
-//         tooltip
-//           .style("visibility", "visible")
-//           .style("left", event.pageX + "px")
-//           .style("top", event.pageY + "px")
-//           .html(
-//             `<div>${d.country}</div>`
-//           )
-//   })
-
-//   // ballotsPost.on("mouseenter", (event, d) => {
-//   //       tooltip
-//   //         .style("visibility", "visible")
-//   //         .style("left", event.pageX + "px")
-//   //         .style("top", event.pageY + "px")
-//   //         .html(
-//   //           `<div>${d.country}</div>`
-//   //         )
-//   // })
-
-//   //   ballotsCancelled.on("mouseenter", (event, d) => {
-//   //       tooltip
-//   //         .style("visibility", "visible")
-//   //         .style("left", event.pageX + "px")
-//   //         .style("top", event.pageY + "px")
-//   //         .html(
-//   //           `<div>${d.country}</div>`
-//   //         )
-//   // })
-// }
-
-
 function handleMouseleave() {
     ballots.on("mouseout", (event,d) => {
     tooltip.style("visibility", "hidden")
   })
 
-  //   ballotsPost.on("mouseout", (event,d) => {
-  //   tooltip.style("visibility", "hidden")
-  // })
-
-  //   ballotsCancelled.on("mouseout", (event,d) => {
-  //   tooltip.style("visibility", "hidden")
-  // })
 }
 
 </script>
 
-<!-- <svg width={width} height={height} id="svg"   on:mouseenter={handleMousemove}> -->
 <svg width={width} height={height} id="svg" >
 
   {#if width > 920}
@@ -411,7 +295,6 @@ function handleMouseleave() {
       stroke-width='2'
       opacity={d[opacityValue]}
       ></circle>
-  <!-- </g> -->
 </g>
     {/each}
 
@@ -433,7 +316,6 @@ function handleMouseleave() {
   {#each dataPostponedCalc as d}
       <g class="animate"
       transform="translate({d[whichX]}, {d[whichY]})"
-      in:fade="{{delay: d[whichX]*1.3}}"
       style="--x: {d[whichX]}px; --y: {d[whichY]}px;"
       >
         <path
@@ -526,7 +408,6 @@ function handleMouseleave() {
         fill= {backgroundColor}
         stroke-width='2'
         ></path>
-        <!-- <g transform="translate({d[whichX]}, {d[whichY]})"> -->
           <circle
           cx={d.d4 ? 9 : 8}
           cy=23
@@ -545,8 +426,6 @@ function handleMouseleave() {
           opacity="0.8"
           filter='url(#highlight)'>
           </rect>
-
-        <!-- </g> -->
       </g>
     {/each}
 
@@ -569,12 +448,6 @@ function handleMouseleave() {
     {/if}
 
 
-    <!-- {#if legend === 'yes'}
-      <text class="post-label" transition:fade="{{delay: 600, duration: 100}}" x="26%" y="10"> postponed</text>
-      <text class="post-label" transition:fade="{{delay: 600, duration: 100}}" x="41.5%" y="10"> held</text>
-    {/if} -->
-
-
     {/if}
 
   <!-- smaller screens -->
@@ -593,7 +466,6 @@ function handleMouseleave() {
     {/each}
 
 {#each dataPostponedDates as d}
-        <!-- svelte-ignore component-name-lowercase -->
         <line
         in:fade="{{duration:100, delay: 500}}"
         x1={d.xPost1+2}
@@ -621,15 +493,6 @@ function handleMouseleave() {
   {/each}
 
   {#each dataPostponedDates as d}
-      <!-- <rect
-      x='{d.xPost1}'
-      y='{d.yPost}'
-      width='5'
-      height='5'
-      fill={colorBallot === 'no' ? '#709afa' : ScaleColorReg(d.reg)}
-      opacity={highlighApr === 'yes' ? 0.5 : colorBallot === 'no' ? '0.9' : d.opacityDiff}
-      filter='url(#highlight)'
-      ></rect> -->
       <text class="country-label-postponed"
       in:fade="{{delay: 100}}"
       opacity={d[opacityValue]}
@@ -721,10 +584,6 @@ svg {
     transition: transform 0.6s ease-out;
 	}
 
-  /* .animateHeld {
-    transform: translate(var(--x), var(--y));
-    transition: transform 2s ease-out;
-  } */
 
   .regimes {
     letter-spacing: 0.2em;

@@ -1,5 +1,5 @@
 <script>
-  import { select, scaleOrdinal, map } from 'd3';
+  import { select, scaleOrdinal } from 'd3';
   import { afterUpdate } from 'svelte/internal';
   import  {_} from 'lodash';
 
@@ -33,12 +33,6 @@
   $: democracies = data.filter(d => d.demIndexCat === 'democracy');
   $: autocracies = data.filter(d => d.demIndexCat === 'authoritarian regime');
   $: hybrids = data.filter(d => d.demIndexCat === 'hybrid regime');
-
-  // const margin= { top:25, right:200, bottom:60, left:200 };
-
-  // $: dataCalc = _.chain(data)
-  //   .sortBy('incumbentWon')
-  //   .value();
 
   $: colorScale = scaleOrdinal()
   .domain(["yes", "no", "both", "doesnt apply"])
@@ -106,10 +100,6 @@
 </script>
 
 <svg {width} {height} id="incumbentsSvg">
-  <!-- <text class="regimes" x="100" y="70">democracies</text>
-  <text class="regimes" x="450" y="70">athoritarian regimes</text>
-  <text class="regimes" x="800" y="70">hybrid regimes</text> -->
-
   {#if width > 1119}
   <g transform="translate(100,40)">
     <text class="title" x="0" y="0">Elections where incumbents won or lost, by regime type</text>

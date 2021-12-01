@@ -6,13 +6,9 @@
   import { tweened } from "svelte/motion";
   import { afterUpdate } from 'svelte/internal';
   import  {_} from 'lodash';
-  import dataRaw from '../public/data/dataFinal9';
-  // export let data;
+  import dataRaw from '../public/data/dataFinal';
   export let width;
-  // export let y = 'yTurnout';
-  // export let yTick = 'turnoutScaled';
   export let yTickLabel = 'turnout_reg_votes';
-  // export let regY = 'turnout_reg_votes';
   export let y = 'turnout_reg_votes';
   export let yHorisontal = 60;
   export let turnoutLabel = 'turnout';
@@ -56,43 +52,25 @@
     .reverse()
     .value();
 
-  // const continents = ["Europe","Middle East","Africa","Americas","Asia-Pacific"];
-
   const margin = { top:30, right:20, bottom:100, left:20 };
 
-
-  $: widthUpdated = width/2;
   $: height = width;
 
-  // $: console.log("width is:", width)
 
   $: extentStringency = extent(data, d => d.stringency_index);
-  // $: extentTurnout = extent(data, d => d.turnout_reg_votes);
-  // $: extentTurnoutDiff = extent(data, d => +d.turnoutDiff);
   $: extentY = extent(data, y === 'turnout_reg_votes' ? d => d[y] : d => +d[y]);
 
   $: xScaleStringency= scaleLinear()
     .domain(extentStringency)
     .range([margin.left, width - margin.right]);
 
-  // $: yScaleTurnout = scaleLinear()
-  //   .domain(extentTurnout)
-  //   .range([height-margin.bottom, margin.top]);
-
-  // $: yScaleTurnoutDiff = scaleLinear()
-  // .domain(extentTurnoutDiff)
-  // .range([height-margin.bottom, margin.top]);
 
   $: yScale = scaleLinear()
   .domain(extentY)
   .range([height-margin.bottom, margin.top]);
 
-  // $: colorScale = scaleOrdinal()
-  // .domain(continents)
-  // .range(['#89848a', '#89848a', '#22ab83', '#89848a', '#89848a'])
-
   $: stringencyRange = _.range(20, 100, 10);
-  // $: turnoutRange = y === 'yTurnout' ? _.range(20, 110, 10) : _.range(-25, 20, 5);
+
 
   $: yTurnout = _.range(20, 110, 10);
   $: yTurnoutDiff =  _.range(-25, 20, 5)
@@ -115,7 +93,6 @@
     d: d.d,
     d1: d.d1,
     d4: d.d4,
-    // regionColor: colorScale(d.continent),
     country: d.country,
     continent: d.continent
 
@@ -154,9 +131,6 @@
 
   $: horisontalLineData = [{x:horizX[0], y: horizY[0]}, {x:horizX[1], y: horizY[1]}];
 
-  // $: horisontalLineData = horizX.map((x,i) => {
-  //   return {x: horizX, y: horizY}
-  // })
 
   $: horizLinePath = line()
     .x(d => d.x)
@@ -166,16 +140,11 @@
 
 ///////////////////////////////////////
 
-  // $: svg = select('svg');
-
 
     afterUpdate(() => {
     let svg = select('#stringencySvg')
     let ballots  = svg.selectAll('.animate')
       .data(dataCalc)
-
-    // let ballotsAfr  = svg.selectAll('.africaRect')
-    //   .data(dataCalc)
 
          ballots.on("mouseenter", (event, d) => {
         tooltip
@@ -279,23 +248,11 @@
     </line>
 
   {#each yTicks as tick }
-    <!-- <g class="tick-y" transform="translate({margin.left*0.6}, {tick[yTick]+11})" > -->
       <text class="tick-y" x="{margin.left*0.1}" y="{tick.yScaled+11}" fill='#000' opacity='0.7'>
         {tick[yTickLabel]}
       </text>
-    <!-- </g>  in:fade="{{delay: 100}}"-->
   {/each}
-  <!-- svelte-ignore component-name-lowercase -->
-  <!-- <line
-    x1="{margin.left*0.8}"
-    x2="{width-(margin.left*0.8)}"
-    y1="{yScale(yHorisontal)+11}"
-    y2="{yScale(yHorisontal)+11}"
-    stroke="#414141"
-    stroke-width="0.8"
-    opacity="0.4"
-    >
-  </line> -->
+
   <path
   d="{$regLinePath}"
   stroke='#709afa'
