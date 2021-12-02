@@ -449,7 +449,7 @@ onMount(() => {
       <section id="turnout-step-2" class="step" >
         <p >Turnout difference in comparison to the previous election has a negative but relatevely weak association with stringency measures. Approximately one third of all elections held between March 2020 and November 2021 had lower, or the same turnout as in the previous election and had a higher stringency index.
         </p>
-        <p>Even though stringency measures are related to turnout, the weaker relationship between turnout difference and stringency policies might hint that other factors, such as how close an election is, might have had a higher impact on turnout.</p>
+        <p>Even though stringency measures are related to turnout, the weaker relationship between turnout difference and stringency policies might hint that other factors, such as how close elections were, might have had a higher impact on turnout.</p>
       </section>
       <section class="step step-last-one" id="turnout-step-3" >
         <p>Elections during pandemic in <span id='africa'>Africa</span> tended to have higher turnout than in the previous election and lower stringency index than elections in other countries. Half of all elections with higher turnout and low stringency measures were in Africa. </p>
