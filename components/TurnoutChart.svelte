@@ -103,7 +103,7 @@ $: if (width < 920) {
   <g transform="translate({medianTurnout-7},45)">
     <path d="M10,93 L10,90 C10,75 20,70 30,70 L 37,70" fill="none" stroke="#525252"></path>
   </g>
-  <text  class="country-labels" x={xScaleTurnout(64)} y="119">median</text>
+  <text  class="country-labels" x={xScaleTurnout(65)} y="119">median</text>
 
   <rect width='7' height='8' x='68%' y='10%' fill='{backgroundColor}' stroke='#191919' stroke-width='1'></rect>
   <text  class="country-labels" x='69.5%' y='13%'>One rectangle represents one election</text>

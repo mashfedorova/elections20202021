@@ -407,7 +407,7 @@ onMount(() => {
         With the pandemic affecting electoral calendars across the globe and political spectrum, has voter turnout<span class="tooltip">*<span class="tooltiptext">Turnout is defined as percentage of registered voters who participated in election</span></span> experienced any changes? External shocks could potentially influence voter turnout in two ways: (1) by increasing the cost of voting, leading to fewer people showing up at the voting booths, or (2) by having a mobilizing effect.
       </p>
       <p class="para">
-        The analysis shows that, in general, turnout has declined slightly since the start of 2020 in comparison to elections held before. On average, turnout was 60%.
+        The analysis shows that, in general, turnout has declined slightly since the start of 2020 in comparison to elections held before. On average, turnout was 61%.
       </p>
       <p class="para">
          A few countries held elections with quite a low turnout, which was affected by many factors, not only related to the pandemic. One example is <strong>Algeria</strong>, where a referendum proposing constitutional changes was held in November 2020. Many <a href="https://www.aljazeera.com/news/2020/11/1/algeria-votes-on-referendum-aimed-at-ending-protest-movement" target="_blank">criticized</a> the referendum, pointing out that country's ultra presidential regime will not change. The opposition movement called for a boycott of the vote.
