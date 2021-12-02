@@ -94,9 +94,9 @@ $: yScaleTextReg = scaleOrdinal()
 
 $: ScaleColorReg = scaleOrdinal()
 .domain(regimes)
-.range(["#cd5f8d",
-"#dea646",
-"#7959d7",
+.range(["#e87070",
+"#2bc48b",
+"#704bdd",
 "#5c5c5c"])
 
 $: yScalePostponed = scaleBand()

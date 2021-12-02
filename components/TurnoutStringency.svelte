@@ -69,10 +69,10 @@
   .domain(extentY)
   .range([height-margin.bottom, margin.top]);
 
-  $: stringencyRange = _.range(20, 100, 10);
+  $: stringencyRange = _.range(0, 100, 10);
 
 
-  $: yTurnout = _.range(20, 110, 10);
+  $: yTurnout = _.range(0, 110, 10);
   $: yTurnoutDiff =  _.range(-25, 20, 5)
 
   $: yTicksData = yTurnout.map((x,i) => {
@@ -166,6 +166,13 @@
 
 </script>
 <svg id="stringencySvg" width={width} height={height}>
+    {#if rectTurnoutStringency && width > 613}
+    <g transition:fade>
+      <rect x="{xScaleStringency(51)}" y="{yScale(-1)}" width="{width-xScaleStringency(49)}" height="{height-yScale(-4)}" fill="#709afa" opacity="0.1"></rect>
+      <text x="{width-(margin.left*15)}" y="{height-150}" fill='#709afa' opacity='0.7'>High stringency measures and lower turnout</text>
+      <text x="{width-(margin.left*15)}" y="{height-130}" fill='#709afa' opacity='0.7'>in comparison to the previous election</text>
+    </g>
+  {/if}
   {#if width > 613}
   {#each dataCalc as d}
     <g
@@ -272,13 +279,6 @@
   </path>
   <text x="{margin.left/1.7}" y="12" fill='#000' opacity='0.7'>{turnoutLabel}</text>
   <text x="{width-(margin.left*5.2)}" y="{height-5}" fill='#000' opacity='0.7'>stringency index</text>
-  {#if rectTurnoutStringency && width > 613}
-    <g transition:fade>
-      <rect x="{xScaleStringency(51)}" y="{yScale(-1)}" width="{width-xScaleStringency(49)}" height="{height-yScale(-4)}" fill="#709afa" opacity="0.1"></rect>
-      <text x="{width-(margin.left*15)}" y="{height-150}" fill='#709afa' opacity='0.7'>High stringency measures and lower turnout</text>
-      <text x="{width-(margin.left*15)}" y="{height-130}" fill='#709afa' opacity='0.7'>in comparison to the previous election</text>
-    </g>
-  {/if}
 
   <filter id="highlight">
     <feGaussianBlur stdDeviation="7 7"/>

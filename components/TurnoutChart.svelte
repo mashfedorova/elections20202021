@@ -17,7 +17,7 @@ $: if (width < 920) {
   const continents = ["Europe","Middle East","Africa","Americas","Asia-Pacific"];
   const regimes = ["democracy","unclassified","authoritarian regime","hybrid regime"];
   const backgroundColor = "#f0e8e5";
-  const xTicksTurnout = [0,10,30, 40, 50, 60, 70, 80, 90, 100];
+  const xTicksTurnout = [0,10,20,30, 40, 50, 60, 70, 80, 90, 100];
 
   $: xTicksTurnoutDiff = [-25, -15, -5, 0, 5, 15];
 
@@ -35,7 +35,7 @@ $: if (width < 920) {
 
   $: colorScale = scaleOrdinal()
   .domain(regimes)
-  .range(["#cd5f8d",backgroundColor,"#7959d7",backgroundColor])
+  .range(["#f26b6b",backgroundColor,"#704bdd",backgroundColor])
 
   $: dataCalc = data.map(d => {
     return {
@@ -58,8 +58,8 @@ $: if (width < 920) {
     simulation.tick()
   })
 
-  $: medianTurnout = xScaleTurnout(59);
-  $: medianTurnoutDiff = xScaleTurnoutDiff(-2);
+  $: medianTurnout = xScaleTurnout(61);
+  $: medianTurnoutDiff = xScaleTurnoutDiff(-3);
 
 </script>
 
@@ -82,16 +82,16 @@ $: if (width < 920) {
   <text  class="country-labels" x={xScaleTurnout(24)} y={(height/2)-70}>Egypt had a low turnout</text>
   <text  class="country-labels" x={xScaleTurnout(24)} y={(height/2)-55}>in parliamentary elections</text>
   <text  class="country-labels" x={xScaleTurnout(24)} y={(height/2)-40}>despite  the government's efforts</text>
-  <text  class="country-labels" x={xScaleTurnout(24)} y={(height/2)-25}>to bring voters to the polls.</text>
+  <text  class="country-labels" x={xScaleTurnout(24)} y={(height/2)-25}>to bring voters to the polls</text>
   <line  x1={xScaleTurnout(29.3)} x2={xScaleTurnout(29.3)} y1={(height/2)-20} y2={(height/2-5)} stroke='#525252'></line>
   <text  class="country-labels" x={xScaleTurnout(17)} y={(height/2)+35}>Algeria held a referendum</text>
   <text  class="country-labels" x={xScaleTurnout(17)} y={(height/2)+50}>proposing a revised constitution.</text>
   <text  class="country-labels" x={xScaleTurnout(17)} y={(height/2)+65}>Critics called for a boycott of the vote</text>
-  <text  class="country-labels" x={xScaleTurnout(17)} y={(height/2)+80}>seen as lacking in substance.</text>
+  <text  class="country-labels" x={xScaleTurnout(17)} y={(height/2)+80}>seen as lacking in substance</text>
   <line  x1={xScaleTurnout(23.3)} x2={xScaleTurnout(23.3)} y1={(height/2+12)} y2={(height/2+20)} stroke='#525252'></line>
   <text  class="country-labels" x={xScaleTurnout(50)} y={(height/2)+40}>Mexico formally requires</text>
   <text  class="country-labels" x={xScaleTurnout(50)} y={(height/2)+55}>voting, but imposes</text>
-  <text  class="country-labels" x={xScaleTurnout(50)} y={(height/2)+70}>no formal sanctions.</text>
+  <text  class="country-labels" x={xScaleTurnout(50)} y={(height/2)+70}>no formal sanctions</text>
   <line  x1={xScaleTurnout(54.5)} x2={xScaleTurnout(54.5)} y1={(height/2+15)} y2={(height/2+25)} stroke='#525252'></line>
   <text  class="country-labels" x={xScaleTurnout(5)} y={(height/2)-25}>Referendum in</text>
   <text  class="country-labels" x={xScaleTurnout(5)} y={(height/2)-12}>Mexico</text>
