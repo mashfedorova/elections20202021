@@ -395,7 +395,7 @@ onMount(() => {
     <p>Elections were <span class="postponed">postponed</span>  in democratic regimes, as well as in authoritarian. However, twice as many democracies postponed elections as autocracies. While democracies always held postponed elections later, non-democratic regimes tended to postpone elections <span id='postponedGray'>indefinitely.</span></p>
   </section>
   <section class="step" id="step-7">
-    <p>Non-democratic regimes tended to postpone elections for longer. While on average, <span class="demo">democracies</span> postponed elections for approximately two months, <span class="auto">autocracies</span> and <span class="hyb">hybrid regimes</span> postponed elections on average for four months.</p>
+    <p>Non-democratic regimes tended to postpone elections for longer. While on average, <span class="demo">democracies</span> postponed elections for approximately three months, <span class="auto">autocracies</span> postponed elections on average for five months. and <span class="hyb">hybrid regimes</span> for four months.</p>
   </section>
   <section class="step" id="step-8">
     <p><strong>Ethiopia</strong> postponed parliamentary elections multiple times and for the longest period, for about ten months. Elections were originally scheduled for the end of August. At that time, 1,500 COVID-19 cases were recorded in the country, one of the highest numbers during the pandemic. The <a href="https://www.aljazeera.com/opinions/2021/6/18/why-ethiopias-elections-should-be-postponed" target="_blank">postponement</a> of elections, done unilaterally by the prime minister Abiy Ahmed was met with criticism by his opponents. </p>
