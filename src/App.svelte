@@ -47,7 +47,7 @@ let stringentChartY = 'turnout_reg_votes';
 let yTick = 'turnoutScaled';
 let yTickLabel = 'turnout_reg_votes';
 let regY = 'turnout_reg_votes';
-let yHorisontal = 60;
+let yHorisontal = 50;
 let turnoutLabel = 'turnout';
 let rectTurnoutStringency = '';
 let regionsHighlight = '';
@@ -353,7 +353,7 @@ onMount(() => {
   <img src="./ballots.jpg" alt="ballot" width="200">
   <h1> How COVID-19 disrupted elections around the world</h1>
   <a id="byline" href="https://twitter.com/mashfedorova" target="_blank">Maria Fedorova</a>
-  <p class="intro-para">Between March 2020, when WHO has <a href='https://www.euro.who.int/en/health-topics/health-emergencies/coronavirus-covid-19/news/news/2020/3/who-announces-covid-19-outbreak-a-pandemic' target="_blank">declared</a> coronavirus (COVID-19) outbreak a global pandemic, and November 2021, 89 countries held national elections. Some of the initially scheduled elections were postponed primarily due to the challenges caused by the pandemic. Many countries held elections nevertheless. What characterized elections during these two challenging years? Below is an overview of all national elections that happened during the last two years.</p>
+  <p class="intro-para">Between March 2020, when WHO has <a href='https://www.euro.who.int/en/health-topics/health-emergencies/coronavirus-covid-19/news/news/2020/3/who-announces-covid-19-outbreak-a-pandemic' target="_blank">declared</a> coronavirus (COVID-19) outbreak a global pandemic, and November 2021, 91 countries held national elections. Some of the initially scheduled elections were postponed primarily due to the challenges caused by the pandemic. Many countries held elections nevertheless. What characterized elections during these two challenging years? Below is an overview of all national elections that happened during the last two years.</p>
 </section>
 <div id="intro-chart" bind:this={width} >
    <IntroChart data={updatedData} width={widthChart} {cancelledBallots} {whichY} {whichX} {dataRectsPostponed} {monthsRaw} {regimes}
@@ -376,7 +376,7 @@ onMount(() => {
     <p>Here are those elections that were originally postponed shown on the month that they were actually held.</p>
   </section>
   <section class="step" id="step-3">
-    <p>Between March 2020 and November 2021, elections were held in 89 countries. In total, 110 elections were held, with 17 countries having held multiple elections during this period.</p>
+    <p>Between March 2020 and November 2021, elections were held in 91 countries. In total, 110 elections were held, with 18 countries having held multiple elections during this period.</p>
   </section>
   <section class="step" id="step-4">
     <p>In April 2020, a month after WHO declared the COVID-19 outbreak a pandemic many countries decided to cancel scheduled elections. Only two countries - Kiribati and South Korea - held elections nevertheless. </p>
@@ -445,9 +445,12 @@ onMount(() => {
     <TurnoutStringency width={widthScatter} y={stringentChartY} {yTickLabel} {yHorisontal} {turnoutLabel} {rectTurnoutStringency} {regionsHighlight}/>
   </div>
     <article class="scrolls">
-      <p class="step" id="turnout-step-1">Analysis shows that while there was a negative relationship between turnout and stringency measures. In countries with more stringent policies, fewer voters showed at the polls compared to countries with lower stringency measures. </p>
-      <p class="step" id="turnout-step-2">Turnout difference in comparison to the previous election has a negative but relatevely weak association with stringency measures. Approximately one third of all elections held between March 2020 and November 2021 had lower, or the same turnout as in the previous election and had a higher stringency index.
-      </p>
+      <p class="step" id="turnout-step-1">Analysis shows that there was a negative relationship between turnout and stringency measures. In countries with more stringent policies, fewer voters showed at the polls compared to countries with lower stringency measures. </p>
+      <section id="turnout-step-2" class="step" >
+        <p >Turnout difference in comparison to the previous election has a negative but relatevely weak association with stringency measures. Approximately one third of all elections held between March 2020 and November 2021 had lower, or the same turnout as in the previous election and had a higher stringency index.
+        </p>
+        <p>Even though stringency measures are related to turnout, the weaker relationship between turnout difference and stringency policies might hint that other factors, such as how close an election is, might have a higher impact on turnout.</p>
+      </section>
       <section class="step step-last-one" id="turnout-step-3" >
         <p>Elections during pandemic in <span id='africa'>Africa</span> tended to have higher turnout than in the previous election and lower stringency index than elections in other countries. Half of all elections with higher turnout and low stringency measures were in Africa. </p>
       </section>
@@ -480,7 +483,7 @@ onMount(() => {
   </section>
   <section class="textblocks">
     <h3> Thanks</h3>
-    <p class="para small small-last"> Special thanks to the invaluable comments of the members of Information Design and Elevate Groups!</p>
+    <p class="para small small-last"> Special thanks to the invaluable comments of the members of Information Design and Elevate Groups, as well as Raúl & Lena!</p>
   </section>
 <style>
 
@@ -588,7 +591,7 @@ h1 {
 }
 
 .auto {
-  background: rgba(242, 107, 107, 0.3);
+  background: rgba(242, 107, 107, 0.4);
   background-position: 0 100%;
   padding-left: 2px;
   padding-right: 2px;

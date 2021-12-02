@@ -140,6 +140,11 @@ $: if (width < 920) {
 
   <line x1='{medianTurnoutDiff+3}' x2='{medianTurnoutDiff+3}' y1='{height/2-15}' y2='{height/2+25}' stroke='#525252' stroke-linecap="round" stroke-width='3'></line>
 
+  <g transform="translate({medianTurnoutDiff-7},45)">
+    <path d="M10,93 L10,90 C10,75 20,70 30,70 L 37,70" fill="none" stroke="#525252"></path>
+  </g>
+  <text  class="country-labels" x={xScaleTurnoutDiff(-1)} y="119">median</text>
+
   {/if}
 
   {#if width < 920 && width > 500 && xTicks === 'difference'}

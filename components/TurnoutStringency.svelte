@@ -10,7 +10,7 @@
   export let width;
   export let yTickLabel = 'turnout_reg_votes';
   export let y = 'turnout_reg_votes';
-  export let yHorisontal = 60;
+  export let yHorisontal = 50;
   export let turnoutLabel = 'turnout';
   export let rectTurnoutStringency = '';
   export let regionsHighlight = '';
